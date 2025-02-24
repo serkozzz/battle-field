@@ -79,8 +79,8 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         let itemProvider = NSItemProvider(object: NSString())
         let dragItem = UIDragItem(itemProvider: itemProvider)
         var id = dataSource.itemIdentifier(for: indexPath)!
-        dragItem.localObject = dataSource.itemIdentifier(for: indexPath)
-        game.selectedCell = Field.shared.cell(id: id)
+        dragItem.localObject = id
+        game.startMovement(cellID: id)
         
         reloadSnapshot()
         return [dragItem]
@@ -116,7 +116,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
-        game.selectedCell = nil
+        game.moveTo(cellId: dragDestinationID!)
         dragDestinationID = nil
         reloadSnapshot()
         return

@@ -35,4 +35,20 @@ class Field {
     func cell(id: UUID) -> Cell {
         return flattenedCells.first { id == $0.id }!
     }
+    
+    func setFighter(to cellID: UUID, fighter: Fighter?) {
+        let (i,j) = self.cellCoords(id: cellID)
+        cells[i][j].fighter = fighter
+    }
+        
+    private func cellCoords(id: UUID) -> (Int, Int) {
+        for i in 0..<rows {
+            for j in 0..<columns {
+                if cells[i][j].id == id {
+                    return (i, j)
+                }
+            }
+        }
+        fatalError("cellCoords: id is not on the field")
+    }
 }
