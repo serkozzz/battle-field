@@ -11,23 +11,44 @@ private var reuseIdentifier = "Cell"
 
 class BattleFieldViewController: UIViewController {
 
-    @IBOutlet weak var collecitonView: UICollectionView!
+    @IBOutlet weak var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, UUID>!
+    var dragDestinationID: UUID?
+    
+    var game = Game()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collecitonView.collectionViewLayout = createLayout()
+        collectionView.collectionViewLayout = createLayout()
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
-        collecitonView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.dragInteractionEnabled = true // Включить drag
+        collectionView.dragDelegate = self
+        collectionView.dropDelegate = self
+        
         // Do any additional setup after loading the view.
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collecitonView) { [weak self] collectionView, indexPath,
+        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath,
             cellID in
+            guard let self = self else { return nil }
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
             let cellModel = Field.shared.cell(id: cellID)
             
             var backgroundConf = cell.defaultBackgroundConfiguration()
-            backgroundConf.backgroundColor = .orange
+            
+            if (dragDestinationID == cellID) {
+                backgroundConf.backgroundColor = .blue
+            }
+            else {
+                switch game.cellState(id: cellID) {
+                case.normal:
+                    backgroundConf.backgroundColor = .systemGray5
+                case .accesable:
+                    backgroundConf.backgroundColor = .init(red: 0, green: 1, blue: 0, alpha: 0.4)
+                case .forbidden:
+                    backgroundConf.backgroundColor = .red
+                }
+            }
             cell.backgroundConfiguration = backgroundConf
             
             var conf = UIListContentConfiguration.cell()
@@ -45,6 +66,63 @@ class BattleFieldViewController: UIViewController {
         snapshot.appendItems(Field.shared.flattenedCells.map { $0.id })
         dataSource.apply(snapshot, animatingDifferences: true)
     }
+    
+    func reloadSnapshot() {
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadSections([0])
+        dataSource.apply(snapshot)
+    }
+}
+
+extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: any UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let itemProvider = NSItemProvider(object: NSString())
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        var id = dataSource.itemIdentifier(for: indexPath)!
+        dragItem.localObject = dataSource.itemIdentifier(for: indexPath)
+        game.selectedCell = Field.shared.cell(id: id)
+        
+        reloadSnapshot()
+        return [dragItem]
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        dropSessionDidUpdate session: any UIDropSession,
+        withDestinationIndexPath destinationIndexPath: IndexPath?
+    ) -> UICollectionViewDropProposal {
+        
+        if let dstIdxPath = destinationIndexPath {
+        
+            let srcItemID = session.localDragSession!.items.first!.localObject as! UUID
+            let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
+            
+            if dstItemID != srcItemID && dstItemID != dragDestinationID  {
+                var itemsToReload: [UUID] = []
+                if let prevDst = dragDestinationID {
+                    itemsToReload.append(prevDst)
+                }
+                dragDestinationID = dstItemID
+                itemsToReload.append(dstItemID)
+                
+                var snapshot = dataSource.snapshot()
+                snapshot.reloadItems(itemsToReload)
+                dataSource.apply(snapshot, animatingDifferences: false)
+            }
+        }
+        return UICollectionViewDropProposal(operation: .move)
+    }
+    
+    
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
+        game.selectedCell = nil
+        dragDestinationID = nil
+        reloadSnapshot()
+        return
+    }
+    
+    
 }
 
 

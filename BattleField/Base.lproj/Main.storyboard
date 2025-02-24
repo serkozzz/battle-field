@@ -49,7 +49,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Battle" id="wPb-l4-iHR"/>
                     <connections>
-                        <outlet property="collecitonView" destination="nFG-UE-fcF" id="opT-3z-2Yd"/>
+                        <outlet property="collectionView" destination="nFG-UE-fcF" id="opT-3z-2Yd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
