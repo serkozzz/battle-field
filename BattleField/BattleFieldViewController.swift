@@ -65,10 +65,10 @@ class BattleFieldViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    func reloadSnapshot() {
+    func reloadSnapshot(animating: Bool = true) {
         var snapshot = dataSource.snapshot()
         snapshot.reloadSections([0])
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: animating)
     }
 }
 
@@ -131,6 +131,10 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
                 snapshot.reloadItems(itemsToReload)
                 dataSource.apply(snapshot, animatingDifferences: false)
             }
+            
+            if !game.canMoveTo(cellId: dstItemID) {
+                return UICollectionViewDropProposal(operation: .forbidden)
+            }
         }
         return UICollectionViewDropProposal(operation: .move)
     }
@@ -145,7 +149,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     func cancelMovement() {
         dragDestinationID = nil
         game.cancelMovement()
-        reloadSnapshot()
+        reloadSnapshot(animating: false)
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
