@@ -15,16 +15,15 @@ struct Game {
         case forbidden
     }
 
-    private(set) var selectedCell: UUID?
     private let field = Field.shared
-    private let stepDistance = 1
+    private(set) var playerMotionManager = PlayerMotionManager()
     
     func cellState(id: UUID) -> CellState {
-        if let selectedCell {
-            if id == selectedCell {
+        if playerMotionManager.isActive {
+            if id == playerMotionManager.selectedCell {
                 return .normal
             }
-            if canMoveTo(cellId: id) {
+            if playerMotionManager.canMoveTo(cellId: id) {
                 return .accesable
             }
             return .forbidden
@@ -33,35 +32,18 @@ struct Game {
             return .normal
         }
     }
-    
-    func canStartMovement(cellID: UUID) -> Bool {
-        field.cell(id: cellID).fighter != nil
-    }
-    
-    mutating func startMovement(cellID: UUID) {
-        selectedCell = cellID
-    }
-    
-    func canMoveTo(cellId: UUID) -> Bool {
-        if let selectedCell {
-            
-            let selectedCellCoords = field.cellCoords(id: selectedCell)
-            let coords = field.cellCoords(id: cellId)
-            if abs(coords.0 - selectedCellCoords.0) <= stepDistance && abs(coords.1 - selectedCellCoords.1) <= stepDistance {
-                return true
-            }
-        }
-        return false
-    }
-    
-    mutating func cancelMovement() {
-        selectedCell = nil
-    }
-    
-    mutating func moveTo(cellId: UUID) {
-        field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
-        field.setFighter(to: selectedCell!, fighter: nil)
-        selectedCell = nil
-    }
+}
 
+//MARK: PlayerMotion
+extension Game {
+    func canStartMovement(cellID: UUID) -> Bool { playerMotionManager.canStartMovement(cellID: cellID) }
+    
+    mutating func startMovement(cellID: UUID) { playerMotionManager.startMovement(cellID: cellID) }
+    
+    func canMoveTo(cellId: UUID) -> Bool { playerMotionManager.canMoveTo(cellId: cellId) }
+    
+    mutating func cancelMovement() { playerMotionManager.cancelMovement() }
+    
+    mutating func moveTo(cellId: UUID) { playerMotionManager.moveTo(cellId: cellId)   }
+    
 }

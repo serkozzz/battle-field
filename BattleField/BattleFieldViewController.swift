@@ -140,7 +140,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
-        if (game.selectedCell != nil) {
+        if (game.playerMotionManager.isActive) {
             cancelMovement()
         }
     }
@@ -155,7 +155,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
         guard let dropDestIndex = coordinator.destinationIndexPath,
               let dropDest = dataSource.itemIdentifier(for: dropDestIndex),
-              dropDest != game.selectedCell
+              dropDest != game.playerMotionManager.selectedCell
         else {
             cancelMovement()
             return
