@@ -16,15 +16,15 @@ class Field {
     private(set) var columns = FIELD_COLUMNS
     private(set) var rows = FIELD_ROWS
     
-    var cells: [[Cell]]
+    var cells: [[FieldTile]]
     
-    var flattenedCells: [Cell] {
+    var flattenedCells: [FieldTile] {
         return cells.flatMap { $0 }
     }
     
     init() {
         cells = (0..<FIELD_ROWS).map { _ in
-            (0..<FIELD_COLUMNS).map { _ in Cell() }}
+            (0..<FIELD_COLUMNS).map { _ in FieldTile() }}
         
         for i in 0..<FIELD_ROWS {
             cells[i][0].fighter = Fighter()
@@ -32,7 +32,7 @@ class Field {
         }
     }
     
-    func cell(id: UUID) -> Cell {
+    func cell(id: UUID) -> FieldTile {
         return flattenedCells.first { id == $0.id }!
     }
     
@@ -41,7 +41,7 @@ class Field {
         cells[i][j].fighter = fighter
     }
         
-    private func cellCoords(id: UUID) -> (Int, Int) {
+    func cellCoords(id: UUID) -> (Int, Int) {
         for i in 0..<rows {
             for j in 0..<columns {
                 if cells[i][j].id == id {

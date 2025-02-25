@@ -20,7 +20,7 @@ class BattleFieldViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.collectionViewLayout = createLayout()
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(BattleFieldCollectionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         collectionView.dragInteractionEnabled = true // Включить drag
         collectionView.dragDelegate = self
@@ -31,30 +31,28 @@ class BattleFieldViewController: UIViewController {
             cellID in
             guard let self = self else { return nil }
             
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BattleFieldCollectionCell
             let cellModel = Field.shared.cell(id: cellID)
             
-            var backgroundConf = cell.defaultBackgroundConfiguration()
-            
             if (dragDestinationID == cellID) {
-                backgroundConf.backgroundColor = .blue
+                //cell.backgroundColor = .blue
+                cell.layer.borderWidth = 2
+                cell.layer.borderColor = UIColor.black.cgColor
             }
             else {
-                switch game.cellState(id: cellID) {
-                case.normal:
-                    backgroundConf.backgroundColor = .systemGray5
-                case .accesable:
-                    backgroundConf.backgroundColor = .init(red: 0, green: 1, blue: 0, alpha: 0.4)
-                case .forbidden:
-                    backgroundConf.backgroundColor = .red
-                }
+                cell.layer.borderWidth = 0
             }
-            cell.backgroundConfiguration = backgroundConf
-            
-            var conf = UIListContentConfiguration.cell()
-            conf.image = cellModel.fighter != nil ? UIImage(systemName: cellModel.fighter!.imageName) : nil
-            
-            cell.contentConfiguration = conf
+            switch game.cellState(id: cellID) {
+            case.normal:
+                cell.backgroundColor = .systemGray6
+            case .accesable:
+                cell.backgroundColor = .init(red: 0, green: 1, blue: 0, alpha: 0.2)
+            case .forbidden:
+                cell.backgroundColor = .red
+            }
+        
+    
+            cell.image = cellModel.fighter != nil ? UIImage(systemName: cellModel.fighter!.imageName) : nil
             return cell
         }
         applySnapshot()
@@ -78,13 +76,29 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: any UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let itemProvider = NSItemProvider(object: NSString())
         let dragItem = UIDragItem(itemProvider: itemProvider)
-        var id = dataSource.itemIdentifier(for: indexPath)!
+        let id = dataSource.itemIdentifier(for: indexPath)!
         dragItem.localObject = id
         game.startMovement(cellID: id)
+        
+        let cell = collectionView.cellForItem(at: indexPath) as! BattleFieldCollectionCell
+        let previewCell = cell.snapshotView(afterScreenUpdates: false)!
+        //previewCell.backgroundColor = .clear
+        
+        dragItem.previewProvider = {
+            
+            let previewParams = UIDragPreviewParameters()
+            previewParams.backgroundColor = .clear // Полностью прозрачный фон
+            previewParams.visiblePath = UIBezierPath(roundedRect: previewCell.frame, cornerRadius: 10)
+            
+            let preview = UIDragPreview(view: previewCell, parameters: previewParams)
+            return preview
+        }
         
         reloadSnapshot()
         return [dragItem]
     }
+    
+
     
     func collectionView(
         _ collectionView: UICollectionView,

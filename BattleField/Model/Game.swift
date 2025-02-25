@@ -8,6 +8,7 @@
 import Foundation
 
 struct Game {
+    
     enum CellState {
         case normal
         case accesable
@@ -16,10 +17,20 @@ struct Game {
 
     private(set) var selectedCell: UUID?
     private let field = Field.shared
+    private let stepDistance = 1
     
     func cellState(id: UUID) -> CellState {
-        if let _ = selectedCell {
-            return .accesable
+        if let selectedCell {
+            if id == selectedCell {
+                return .normal
+            }
+            
+            let selectedCellCoords = field.cellCoords(id: selectedCell)
+            let coords = field.cellCoords(id: id)
+            if abs(coords.0 - selectedCellCoords.0) <= stepDistance && abs(coords.1 - selectedCellCoords.1) <= stepDistance {
+                return .accesable
+            }
+            return .forbidden
         }
         else {
             return .normal
