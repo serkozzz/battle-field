@@ -24,10 +24,7 @@ struct Game {
             if id == selectedCell {
                 return .normal
             }
-            
-            let selectedCellCoords = field.cellCoords(id: selectedCell)
-            let coords = field.cellCoords(id: id)
-            if abs(coords.0 - selectedCellCoords.0) <= stepDistance && abs(coords.1 - selectedCellCoords.1) <= stepDistance {
+            if canMoveTo(cellId: id) {
                 return .accesable
             }
             return .forbidden
@@ -43,6 +40,22 @@ struct Game {
     
     mutating func startMovement(cellID: UUID) {
         selectedCell = cellID
+    }
+    
+    func canMoveTo(cellId: UUID) -> Bool {
+        if let selectedCell {
+            
+            let selectedCellCoords = field.cellCoords(id: selectedCell)
+            let coords = field.cellCoords(id: cellId)
+            if abs(coords.0 - selectedCellCoords.0) <= stepDistance && abs(coords.1 - selectedCellCoords.1) <= stepDistance {
+                return true
+            }
+        }
+        return false
+    }
+    
+    mutating func cancelMovement() {
+        selectedCell = nil
     }
     
     mutating func moveTo(cellId: UUID) {

@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct FieldTile {
+struct FieldCell {
     var fighter: Fighter?
     var id = UUID()
 }

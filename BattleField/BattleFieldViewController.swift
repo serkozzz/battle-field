@@ -135,9 +135,29 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         return UICollectionViewDropProposal(operation: .move)
     }
     
+    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
+        if (game.selectedCell != nil) {
+            cancelMovement()
+        }
+    }
+
     
+    func cancelMovement() {
+        dragDestinationID = nil
+        game.cancelMovement()
+        reloadSnapshot()
+    }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
+        guard let dropDestIndex = coordinator.destinationIndexPath,
+              let dropDest = dataSource.itemIdentifier(for: dropDestIndex),
+              dropDest != game.selectedCell
+        else {
+            cancelMovement()
+            return
+        }
+        
+        
         game.moveTo(cellId: dragDestinationID!)
         dragDestinationID = nil
         reloadSnapshot()

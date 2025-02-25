@@ -15,7 +15,7 @@
 		9D638DCD2D6983A900F2FA25 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DC42D6983A900F2FA25 /* SceneDelegate.swift */; };
 		9D638DCE2D6983A900F2FA25 /* BattleFieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DC52D6983A900F2FA25 /* BattleFieldViewController.swift */; };
 		9D638DD12D6983C800F2FA25 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD02D6983BE00F2FA25 /* Field.swift */; };
-		9D638DD32D69845400F2FA25 /* FieldTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD22D69845200F2FA25 /* FieldTile.swift */; };
+		9D638DD32D69845400F2FA25 /* FieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD22D69845200F2FA25 /* FieldCell.swift */; };
 		9D638DD52D6CBAF600F2FA25 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD42D6CBAF000F2FA25 /* Game.swift */; };
 		9D638DD72D6D5BE600F2FA25 /* BattleFieldCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */; };
 /* End PBXBuildFile section */
@@ -31,7 +31,7 @@
 		9D638DC42D6983A900F2FA25 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		9D638DC52D6983A900F2FA25 /* BattleFieldViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleFieldViewController.swift; sourceTree = "<group>"; };
 		9D638DD02D6983BE00F2FA25 /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
-		9D638DD22D69845200F2FA25 /* FieldTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldTile.swift; sourceTree = "<group>"; };
+		9D638DD22D69845200F2FA25 /* FieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldCell.swift; sourceTree = "<group>"; };
 		9D638DD42D6CBAF000F2FA25 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleFieldCollectionCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,7 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				9D638DD42D6CBAF000F2FA25 /* Game.swift */,
-				9D638DD22D69845200F2FA25 /* FieldTile.swift */,
+				9D638DD22D69845200F2FA25 /* FieldCell.swift */,
 				9D638DD02D6983BE00F2FA25 /* Field.swift */,
 				9D638DBE2D6983A900F2FA25 /* Fighter.swift */,
 			);
@@ -171,7 +171,7 @@
 				9D638DD72D6D5BE600F2FA25 /* BattleFieldCollectionCell.swift in Sources */,
 				9D638DCD2D6983A900F2FA25 /* SceneDelegate.swift in Sources */,
 				9D638DCE2D6983A900F2FA25 /* BattleFieldViewController.swift in Sources */,
-				9D638DD32D69845400F2FA25 /* FieldTile.swift in Sources */,
+				9D638DD32D69845400F2FA25 /* FieldCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
