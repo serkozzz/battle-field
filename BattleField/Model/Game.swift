@@ -46,4 +46,6 @@ extension Game {
     
     mutating func moveTo(cellId: UUID) { playerMotionManager.moveTo(cellId: cellId)   }
     
+    mutating func setMovementDestination(cellID: UUID) { playerMotionManager.setMovementDestinaiton(cellId: cellID) }
+    
 }

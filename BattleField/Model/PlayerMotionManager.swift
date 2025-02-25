@@ -13,6 +13,7 @@ struct PlayerMotionManager {
     }
     
     private(set) var selectedCell: UUID?
+    private(set) var movementDestination: UUID?
     private let field = Field.shared
     private let stepDistance = 1
     
@@ -36,13 +37,19 @@ struct PlayerMotionManager {
         return false
     }
     
+    mutating func setMovementDestinaiton(cellId: UUID) {
+        movementDestination = cellId
+    }
+    
     mutating func cancelMovement() {
         selectedCell = nil
+        movementDestination = nil
     }
     
     mutating func moveTo(cellId: UUID) {
         field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
         selectedCell = nil
+        movementDestination = nil
     }
 }

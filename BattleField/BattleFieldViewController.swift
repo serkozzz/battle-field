@@ -13,7 +13,6 @@ class BattleFieldViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, UUID>!
-    var dragDestinationID: UUID?
     
     var game = Game()
     
@@ -34,7 +33,7 @@ class BattleFieldViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BattleFieldCollectionCell
             let cellModel = Field.shared.cell(id: cellID)
             
-            if (dragDestinationID == cellID) {
+            if (game.playerMotionManager.movementDestination == cellID) {
                 //cell.backgroundColor = .blue
                 cell.layer.borderWidth = 2
                 cell.layer.borderColor = UIColor.black.cgColor
@@ -119,12 +118,12 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
             let srcItemID = session.localDragSession!.items.first!.localObject as! UUID
             let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
             
-            if dstItemID != srcItemID && dstItemID != dragDestinationID  {
+            if dstItemID != srcItemID && dstItemID != game.playerMotionManager.movementDestination  {
                 var itemsToReload: [UUID] = []
-                if let prevDst = dragDestinationID {
+                if let prevDst = game.playerMotionManager.movementDestination {
                     itemsToReload.append(prevDst)
                 }
-                dragDestinationID = dstItemID
+                game.setMovementDestination(cellID: dstItemID)
                 itemsToReload.append(dstItemID)
                 
                 var snapshot = dataSource.snapshot()
@@ -147,7 +146,6 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
 
     
     func cancelMovement() {
-        dragDestinationID = nil
         game.cancelMovement()
         reloadSnapshot(animating: false)
     }
@@ -160,10 +158,8 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
             cancelMovement()
             return
         }
-        
-        
-        game.moveTo(cellId: dragDestinationID!)
-        dragDestinationID = nil
+    
+        game.moveTo(cellId: game.playerMotionManager.movementDestination!)
         reloadSnapshot()
         return
     }
