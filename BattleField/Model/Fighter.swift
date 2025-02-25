@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Fighter : Hashable {
+class Fighter {
     var imageName: String = "figure.arms.open"
+    
     
 }

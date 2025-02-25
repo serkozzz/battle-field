@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct PlayerMotionManager {
+class PlayerMotionManager {
    
     var isActive: Bool {
         selectedCell != nil
@@ -21,7 +21,7 @@ struct PlayerMotionManager {
         field.cell(id: cellID).fighter != nil
     }
     
-    mutating func startMovement(cellID: UUID) {
+    func startMovement(cellID: UUID) {
         selectedCell = cellID
     }
     
@@ -37,19 +37,18 @@ struct PlayerMotionManager {
         return false
     }
     
-    mutating func setMovementDestinaiton(cellId: UUID) {
+    func setMovementDestinaiton(cellId: UUID) {
         movementDestination = cellId
     }
     
-    mutating func cancelMovement() {
+    func resetMovement() {
         selectedCell = nil
         movementDestination = nil
     }
     
-    mutating func moveTo(cellId: UUID) {
+    func moveTo(cellId: UUID) {
         field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
-        selectedCell = nil
-        movementDestination = nil
+        resetMovement()
     }
 }

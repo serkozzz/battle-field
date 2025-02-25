@@ -9,14 +9,32 @@ import Foundation
 
 struct Game {
     
+    enum Turn {
+        case player
+        case ai
+    }
+    
     enum CellState {
         case normal
         case accesable
         case forbidden
     }
-
+    
+    private weak var playerMotionManager: PlayerMotionManager!
+    
     private let field = Field.shared
-    private(set) var playerMotionManager = PlayerMotionManager()
+    private(set) var player = Player()
+    private(set) var aiPlayer = Player()
+    
+    init(playerMotionManager: PlayerMotionManager) {
+        (0..<field.rows).forEach{ _ in
+            player.fighters.append(Fighter())
+            aiPlayer.fighters.append(Fighter())
+        }
+        field.placeFighters(playerFighters: player.fighters, enemyFighters: aiPlayer.fighters)
+        
+        self.playerMotionManager = playerMotionManager
+    }
     
     func cellState(id: UUID) -> CellState {
         if playerMotionManager.isActive {
@@ -34,18 +52,12 @@ struct Game {
     }
 }
 
-//MARK: PlayerMotion
+
+//MARK: AIMotion
 extension Game {
-    func canStartMovement(cellID: UUID) -> Bool { playerMotionManager.canStartMovement(cellID: cellID) }
-    
-    mutating func startMovement(cellID: UUID) { playerMotionManager.startMovement(cellID: cellID) }
-    
-    func canMoveTo(cellId: UUID) -> Bool { playerMotionManager.canMoveTo(cellId: cellId) }
-    
-    mutating func cancelMovement() { playerMotionManager.cancelMovement() }
-    
-    mutating func moveTo(cellId: UUID) { playerMotionManager.moveTo(cellId: cellId)   }
-    
-    mutating func setMovementDestination(cellID: UUID) { playerMotionManager.setMovementDestinaiton(cellId: cellID) }
-    
+    mutating func moveAI(fighter: Fighter, to destination: UUID) {
+        var sourceCell = field.cell(withFighter: fighter)!
+        field.setFighter(to: sourceCell, fighter: nil)
+        field.setFighter(to: destination, fighter: fighter)
+    }
 }

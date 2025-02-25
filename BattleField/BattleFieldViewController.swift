@@ -14,10 +14,17 @@ class BattleFieldViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, UUID>!
     
-    var game = Game()
+    var game: Game!
+    var aiController: AIController!
+    var playerMotionManager: PlayerMotionManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        playerMotionManager = PlayerMotionManager()
+        game = Game(playerMotionManager: playerMotionManager)
+        aiController = AIController(aiPlayer: game.aiPlayer)
+        
         collectionView.collectionViewLayout = createLayout()
         collectionView.register(BattleFieldCollectionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
@@ -33,7 +40,7 @@ class BattleFieldViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BattleFieldCollectionCell
             let cellModel = Field.shared.cell(id: cellID)
             
-            if (game.playerMotionManager.movementDestination == cellID) {
+            if (playerMotionManager.movementDestination == cellID) {
                 //cell.backgroundColor = .blue
                 cell.layer.borderWidth = 2
                 cell.layer.borderColor = UIColor.black.cgColor
@@ -69,6 +76,11 @@ class BattleFieldViewController: UIViewController {
         snapshot.reloadSections([0])
         dataSource.apply(snapshot, animatingDifferences: animating)
     }
+    
+    @IBAction func aiTurn(_ sender: Any) {
+        
+    }
+    
 }
 
 extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
@@ -76,7 +88,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         
         let id = dataSource.itemIdentifier(for: indexPath)!
         
-        if !game.canStartMovement(cellID: id) {
+        if !playerMotionManager.canStartMovement(cellID: id) {
             return []
         }
         
@@ -85,7 +97,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
 
         
         dragItem.localObject = id
-        game.startMovement(cellID: id)
+        playerMotionManager.startMovement(cellID: id)
         
         let cell = collectionView.cellForItem(at: indexPath) as! BattleFieldCollectionCell
         let previewCell = cell.snapshotView(afterScreenUpdates: false)!
@@ -118,12 +130,12 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
             let srcItemID = session.localDragSession!.items.first!.localObject as! UUID
             let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
             
-            if dstItemID != srcItemID && dstItemID != game.playerMotionManager.movementDestination  {
+            if dstItemID != srcItemID && dstItemID != playerMotionManager.movementDestination  {
                 var itemsToReload: [UUID] = []
-                if let prevDst = game.playerMotionManager.movementDestination {
+                if let prevDst = playerMotionManager.movementDestination {
                     itemsToReload.append(prevDst)
                 }
-                game.setMovementDestination(cellID: dstItemID)
+                playerMotionManager.setMovementDestinaiton(cellId: dstItemID)
                 itemsToReload.append(dstItemID)
                 
                 var snapshot = dataSource.snapshot()
@@ -131,7 +143,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
                 dataSource.apply(snapshot, animatingDifferences: false)
             }
             
-            if !game.canMoveTo(cellId: dstItemID) {
+            if !playerMotionManager.canMoveTo(cellId: dstItemID) {
                 return UICollectionViewDropProposal(operation: .forbidden)
             }
         }
@@ -139,27 +151,27 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
-        if (game.playerMotionManager.isActive) {
+        if (playerMotionManager.isActive) {
             cancelMovement()
         }
     }
 
     
     func cancelMovement() {
-        game.cancelMovement()
+        playerMotionManager.resetMovement()
         reloadSnapshot(animating: false)
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
         guard let dropDestIndex = coordinator.destinationIndexPath,
               let dropDest = dataSource.itemIdentifier(for: dropDestIndex),
-              dropDest != game.playerMotionManager.selectedCell
+              dropDest != playerMotionManager.selectedCell
         else {
             cancelMovement()
             return
         }
     
-        game.moveTo(cellId: game.playerMotionManager.movementDestination!)
+        playerMotionManager.moveTo(cellId: playerMotionManager.movementDestination!)
         reloadSnapshot()
         return
     }

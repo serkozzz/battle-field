@@ -7,14 +7,12 @@
 
 import Foundation
 
-private var FIELD_COLUMNS: Int = 10
-private var FIELD_ROWS: Int = 5
 
 class Field {
     static var shared = Field()
     
-    private(set) var columns = FIELD_COLUMNS
-    private(set) var rows = FIELD_ROWS
+    private(set) var columns = Global.FIELD_COLUMNS
+    private(set) var rows = Global.FIELD_ROWS
     
     var cells: [[FieldCell]]
     
@@ -23,17 +21,23 @@ class Field {
     }
     
     init() {
-        cells = (0..<FIELD_ROWS).map { _ in
-            (0..<FIELD_COLUMNS).map { _ in FieldCell() }}
-        
-        for i in 0..<FIELD_ROWS {
-            cells[i][0].fighter = Fighter()
-            cells[i][FIELD_COLUMNS - 1].fighter = Fighter()
+        cells = (0..<Global.FIELD_ROWS).map { _ in
+            (0..<Global.FIELD_COLUMNS).map { _ in FieldCell() }}
+    }
+    
+    func placeFighters(playerFighters: [Fighter], enemyFighters: [Fighter]) {
+        for i in 0..<rows {
+            cells[i][0].fighter = playerFighters[i]
+            cells[i][columns - 1].fighter = enemyFighters[i]
         }
     }
     
     func cell(id: UUID) -> FieldCell {
         return flattenedCells.first { id == $0.id }!
+    }
+    
+    func cell(withFighter fighter: Fighter) -> UUID? {
+        flattenedCells.first { $0.fighter === fighter }?.id
     }
     
     func setFighter(to cellID: UUID, fighter: Fighter?) {
