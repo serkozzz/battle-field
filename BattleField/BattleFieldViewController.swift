@@ -48,7 +48,7 @@ class BattleFieldViewController: UIViewController {
             case .accesable:
                 cell.backgroundColor = .init(red: 0, green: 1, blue: 0, alpha: 0.2)
             case .forbidden:
-                cell.backgroundColor = .red
+                cell.backgroundColor = .init(red: 1, green: 0, blue: 0, alpha: 0.6)
             }
         
     
@@ -74,9 +74,17 @@ class BattleFieldViewController: UIViewController {
 
 extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: any UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
+        let id = dataSource.itemIdentifier(for: indexPath)!
+        
+        if !game.canStartMovement(cellID: id) {
+            return []
+        }
+        
         let itemProvider = NSItemProvider(object: NSString())
         let dragItem = UIDragItem(itemProvider: itemProvider)
-        let id = dataSource.itemIdentifier(for: indexPath)!
+
+        
         dragItem.localObject = id
         game.startMovement(cellID: id)
         

@@ -37,6 +37,10 @@ struct Game {
         }
     }
     
+    func canStartMovement(cellID: UUID) -> Bool {
+        field.cell(id: cellID).fighter != nil
+    }
+    
     mutating func startMovement(cellID: UUID) {
         selectedCell = cellID
     }
