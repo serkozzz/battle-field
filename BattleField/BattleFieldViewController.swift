@@ -80,10 +80,20 @@ class BattleFieldViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: animating)
     }
     
+    func reloadSnapshot(items: [UUID], animating: Bool = true) {
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadItems(items)
+        dataSource.apply(snapshot, animatingDifferences: animating)
+    }
+    
     @IBAction func aiTurn(_ sender: Any) {
         let fighter = aiController.selectFighter()
+        let src = Field.shared.cell(withFighter: fighter)!
         let dest = aiController.chooseMovementDestination(for: fighter)
-        aiMotionAnimator.animateMovement(fighter: fighter, to: dest)
+        aiMotionAnimator.animateMovement(fighter: fighter, to: dest) { [weak self] in
+            self?.game.moveAI(fighter: fighter, to: dest)
+            self?.reloadSnapshot(items: [src, dest], animating: false)
+        }
     }
     
 }
@@ -143,9 +153,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
                 playerMover.setMovementDestinaiton(cellId: dstItemID)
                 itemsToReload.append(dstItemID)
                 
-                var snapshot = dataSource.snapshot()
-                snapshot.reloadItems(itemsToReload)
-                dataSource.apply(snapshot, animatingDifferences: false)
+                reloadSnapshot(items: itemsToReload, animating: false)
             }
             
             if !playerMover.canMoveTo(cellId: dstItemID) {

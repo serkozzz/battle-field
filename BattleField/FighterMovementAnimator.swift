@@ -18,7 +18,8 @@ class FighterMovementAnimator
         self.dataSource = diffableDataSource
     }
     
-    func animateMovement(fighter: Fighter, to destCellId: UUID) {
+    func animateMovement(fighter: Fighter, to destCellId: UUID, completed: (() -> Void)? = nil)
+    {
         let field = Field.shared
         let startCellId = field.cell(withFighter: fighter)!
         let startCollectionCell = collectionView.cellForItem(at: dataSource.indexPath(for: startCellId)!) as! BattleFieldCollectionCell
@@ -32,10 +33,13 @@ class FighterMovementAnimator
         imageViewToMove.frame = startFrame
         startCollectionCell.image = nil
         
-        UIView.animate(withDuration: 1.0) { [weak self] in
-            guard let self else { return }
+        UIView.animate(withDuration: 1.0, animations: {
             imageViewToMove.frame = destFrame
-        }
+    
+        }, completion: { _ in
+            imageViewToMove.removeFromSuperview()
+            completed?()
+        });
         
 
         
