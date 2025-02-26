@@ -7,24 +7,35 @@
 
 import Foundation
 
-struct Game {
-    
-    enum Turn {
-        case player
-        case ai
-    }
-    
+enum Turn {
+    case player
+    case ai
+}
+
+protocol GameDelegate: AnyObject {
+    func game(sender: Game, turnDidChange: Turn)
+}
+
+class Game  {
+        
     enum CellState {
         case normal
         case accesable
         case forbidden
     }
     
+    weak var delegate: GameDelegate?
+    
+    var turn: Turn = .player {
+        didSet {
+            delegate?.game(sender: self, turnDidChange: turn)
+        }
+    }
     private(set) var playerMover: PlayerMover!
     
-    private let field = Field.shared
     private(set) var player = Player()
     private(set) var aiPlayer = Player()
+    private let field = Field.shared
     
     init() {
         (0..<field.rows).forEach{ _ in
@@ -34,6 +45,7 @@ struct Game {
         field.placeFighters(playerFighters: player.fighters, enemyFighters: aiPlayer.fighters)
         
         playerMover = PlayerMover(player: player)
+        playerMover.delegate = self
     }
     
     func cellState(id: UUID) -> CellState {
@@ -55,9 +67,18 @@ struct Game {
 
 //MARK: AIMotion
 extension Game {
-    mutating func moveAI(fighter: Fighter, to destination: UUID) {
-        var sourceCell = field.cell(withFighter: fighter)!
+    func moveAI(fighter: Fighter, to destination: UUID) {
+        let sourceCell = field.cell(withFighter: fighter)!
         field.setFighter(to: sourceCell, fighter: nil)
         field.setFighter(to: destination, fighter: fighter)
+        turn = .player
     }
+}
+
+
+extension Game: PlayerMoverDelegate {
+    func playerMover(sender: PlayerMover, didMoveTo destination: UUID) {
+        turn = .ai
+    }
+    
 }

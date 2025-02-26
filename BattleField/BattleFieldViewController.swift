@@ -23,6 +23,7 @@ class BattleFieldViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        game.delegate = self
         playerMover = game.playerMover
         aiController = AIController(aiPlayer: game.aiPlayer)
                 
@@ -87,6 +88,20 @@ class BattleFieldViewController: UIViewController {
     }
     
     @IBAction func aiTurn(_ sender: Any) {
+        makeAITurn()
+    }
+}
+
+
+extension BattleFieldViewController: GameDelegate {
+    func game(sender: Game, turnDidChange turn: Turn) {
+        if (turn == .ai) {
+            makeAITurn()
+        }
+    }
+    
+    func makeAITurn() {
+        //reloadSnapshot()
         let fighter = aiController.selectFighter()
         let src = Field.shared.cell(withFighter: fighter)!
         let dest = aiController.chooseMovementDestination(for: fighter)
@@ -103,7 +118,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         
         let id = dataSource.itemIdentifier(for: indexPath)!
         
-        if !playerMover.canStartMovement(cellID: id) {
+        if !playerMover.canStartMovement(game: game, cellID: id) {
             return []
         }
         
