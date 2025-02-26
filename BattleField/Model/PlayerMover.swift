@@ -6,11 +6,17 @@
 //
 import Foundation
 
+protocol PlayerMoverDelegate: AnyObject {
+    func playerMover(sender: PlayerMover, didMoveTo destination: UUID)
+}
+
 class PlayerMover {
    
     var isActive: Bool {
         selectedCell != nil
     }
+    
+    weak var delegate: PlayerMoverDelegate?
     
     private(set) var selectedCell: UUID?
     private(set) var movementDestination: UUID?
@@ -22,8 +28,9 @@ class PlayerMover {
         self.player = player
     }
     
-    func canStartMovement(cellID: UUID) -> Bool {
-        if let fighter = field.cell(id: cellID).fighter {
+    func canStartMovement(game: Game, cellID: UUID) -> Bool {
+        if game.turn == .player,
+           let fighter = field.cell(id: cellID).fighter {
             return player.fighters.contains { $0 === fighter }
         }
         return false
@@ -55,8 +62,10 @@ class PlayerMover {
     }
     
     func moveTo(cellId: UUID) {
+        var selectedCell = selectedCell
+        resetMovement()
         field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
-        resetMovement()
+        delegate?.playerMover(sender: self, didMoveTo: cellId)
     }
 }

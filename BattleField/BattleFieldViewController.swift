@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 private var reuseIdentifier = "Cell"
 
@@ -20,9 +21,12 @@ class BattleFieldViewController: UIViewController {
     
     var aiMotionAnimator: FighterMovementAnimator!
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        game.delegate = self
         playerMover = game.playerMover
         aiController = AIController(aiPlayer: game.aiPlayer)
                 
@@ -64,6 +68,10 @@ class BattleFieldViewController: UIViewController {
         }
         applySnapshot()
         
+        Field.shared.cellsChanged.sink { [weak self] _ in
+            self?.reloadSnapshot()
+        }.store(in: &cancellables)
+        
         aiMotionAnimator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
     }
     
@@ -74,7 +82,7 @@ class BattleFieldViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    func reloadSnapshot(animating: Bool = true) {
+    func reloadSnapshot(animating: Bool = false) {
         var snapshot = dataSource.snapshot()
         snapshot.reloadSections([0])
         dataSource.apply(snapshot, animatingDifferences: animating)
@@ -87,23 +95,35 @@ class BattleFieldViewController: UIViewController {
     }
     
     @IBAction func aiTurn(_ sender: Any) {
+        makeAITurn()
+    }
+}
+
+
+extension BattleFieldViewController: GameDelegate {
+    func game(sender: Game, turnDidChange turn: Turn) {
+        if (turn == .ai) {
+            makeAITurn()
+        }
+    }
+    
+    func makeAITurn() {
         let fighter = aiController.selectFighter()
         let src = Field.shared.cell(withFighter: fighter)!
         let dest = aiController.chooseMovementDestination(for: fighter)
         aiMotionAnimator.animateMovement(fighter: fighter, to: dest) { [weak self] in
             self?.game.moveAI(fighter: fighter, to: dest)
-            self?.reloadSnapshot(items: [src, dest], animating: false)
         }
     }
-    
 }
+
 
 extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: any UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         let id = dataSource.itemIdentifier(for: indexPath)!
         
-        if !playerMover.canStartMovement(cellID: id) {
+        if !playerMover.canStartMovement(game: game, cellID: id) {
             return []
         }
         
@@ -128,7 +148,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
             return preview
         }
         
-        reloadSnapshot()
+        reloadSnapshot(animating: true)
         return [dragItem]
     }
     
@@ -185,7 +205,6 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         }
     
         playerMover.moveTo(cellId: playerMover.movementDestination!)
-        reloadSnapshot()
         return
     }
     

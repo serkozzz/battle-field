@@ -6,15 +6,21 @@
 //
 
 import Foundation
-
+import Combine
 
 class Field {
     static var shared = Field()
     
+    private(set) var cellsChanged = PassthroughSubject<Void, Never>()
+    
     private(set) var columns = Global.FIELD_COLUMNS
     private(set) var rows = Global.FIELD_ROWS
     
-    var cells: [[FieldCell]]
+    var cells: [[FieldCell]] {
+        didSet {
+            cellsChanged.send()
+        }
+    }
     
     var flattenedCells: [FieldCell] {
         return cells.flatMap { $0 }

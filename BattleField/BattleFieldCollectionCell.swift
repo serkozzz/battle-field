@@ -11,7 +11,9 @@ class BattleFieldCollectionCell: UICollectionViewCell {
     
     var image: UIImage? {
         didSet {
-            imageView.image = image
+            DispatchQueue.main.async {
+                self.imageView.image = self.image
+            }
         }
     }
     
