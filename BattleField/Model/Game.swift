@@ -20,28 +20,28 @@ struct Game {
         case forbidden
     }
     
-    private weak var playerMotionManager: PlayerMotionManager!
+    private(set) var playerMover: PlayerMover!
     
     private let field = Field.shared
     private(set) var player = Player()
     private(set) var aiPlayer = Player()
     
-    init(playerMotionManager: PlayerMotionManager) {
+    init() {
         (0..<field.rows).forEach{ _ in
             player.fighters.append(Fighter())
             aiPlayer.fighters.append(Fighter())
         }
         field.placeFighters(playerFighters: player.fighters, enemyFighters: aiPlayer.fighters)
         
-        self.playerMotionManager = playerMotionManager
+        playerMover = PlayerMover(player: player)
     }
     
     func cellState(id: UUID) -> CellState {
-        if playerMotionManager.isActive {
-            if id == playerMotionManager.selectedCell {
+        if playerMover.isActive {
+            if id == playerMover.selectedCell {
                 return .normal
             }
-            if playerMotionManager.canMoveTo(cellId: id) {
+            if playerMover.canMoveTo(cellId: id) {
                 return .accesable
             }
             return .forbidden

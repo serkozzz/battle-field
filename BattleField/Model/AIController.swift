@@ -23,7 +23,7 @@ class AIController {
     func chooseMovementDestination(for fighter: Fighter) -> UUID {
         var sourceCell = Field.shared.cell(withFighter: fighter)!
         var sourceCoords = field.cellCoords(id: sourceCell)
-        var j = sourceCoords.1 + ((sourceCoords.1 > 0) ? -1 : 1)
+        var j = sourceCoords.1 + ((sourceCoords.1 > 0) ? -Global.STEP_DISTANCE : Global.STEP_DISTANCE)
         return field.cells[sourceCoords.0][j].id
     }
 }

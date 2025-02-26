@@ -6,7 +6,7 @@
 //
 import Foundation
 
-class PlayerMotionManager {
+class PlayerMover {
    
     var isActive: Bool {
         selectedCell != nil
@@ -17,8 +17,16 @@ class PlayerMotionManager {
     private let field = Field.shared
     private let stepDistance = 1
     
+    private var player: Player
+    init(player: Player) {
+        self.player = player
+    }
+    
     func canStartMovement(cellID: UUID) -> Bool {
-        field.cell(id: cellID).fighter != nil
+        if let fighter = field.cell(id: cellID).fighter {
+            return player.fighters.contains { $0 === fighter }
+        }
+        return false
     }
     
     func startMovement(cellID: UUID) {
