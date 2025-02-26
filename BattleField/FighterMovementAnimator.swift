@@ -13,13 +13,31 @@ class FighterMovementAnimator
     private var dataSource: UICollectionViewDiffableDataSource<Int, UUID>!
     
     init(collectionView: UICollectionView, diffableDataSource: UICollectionViewDiffableDataSource<Int, UUID>) {
+
         self.collectionView = collectionView
         self.dataSource = diffableDataSource
     }
     
     func animateMovement(fighter: Fighter, to destCellId: UUID) {
         let field = Field.shared
-        var startCellId = field.cell(withFighter: fighter)!
-        var startCollectionCell = collectionView.cellForItem(at: dataSource.indexPath(for: startCellId)!)
+        let startCellId = field.cell(withFighter: fighter)!
+        let startCollectionCell = collectionView.cellForItem(at: dataSource.indexPath(for: startCellId)!) as! BattleFieldCollectionCell
+        let destCollectionCell = collectionView.cellForItem(at: dataSource.indexPath(for: destCellId)!) as! BattleFieldCollectionCell
+        let startFrame = startCollectionCell.convert(startCollectionCell.imageView.frame, to: collectionView)
+        let destFrame = destCollectionCell.convert(destCollectionCell.imageView.frame, to: collectionView)
+
+        let imageViewToMove = startCollectionCell.imageView.snapshotView(afterScreenUpdates: true)!
+        imageViewToMove.removeFromSuperview()
+        collectionView.addSubview(imageViewToMove)
+        imageViewToMove.frame = startFrame
+        startCollectionCell.image = nil
+        
+        UIView.animate(withDuration: 1.0) { [weak self] in
+            guard let self else { return }
+            imageViewToMove.frame = destFrame
+        }
+        
+
+        
     }
 }

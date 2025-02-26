@@ -18,12 +18,14 @@ class BattleFieldViewController: UIViewController {
     var aiController: AIController!
     var playerMover: PlayerMover!
     
+    var aiMotionAnimator: FighterMovementAnimator!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         playerMover = game.playerMover
         aiController = AIController(aiPlayer: game.aiPlayer)
-        
+                
         collectionView.collectionViewLayout = createLayout()
         collectionView.register(BattleFieldCollectionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
@@ -61,6 +63,8 @@ class BattleFieldViewController: UIViewController {
             return cell
         }
         applySnapshot()
+        
+        aiMotionAnimator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
     }
     
     func applySnapshot(){
@@ -79,6 +83,7 @@ class BattleFieldViewController: UIViewController {
     @IBAction func aiTurn(_ sender: Any) {
         let fighter = aiController.selectFighter()
         let dest = aiController.chooseMovementDestination(for: fighter)
+        aiMotionAnimator.animateMovement(fighter: fighter, to: dest)
     }
     
 }
