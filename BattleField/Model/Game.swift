@@ -18,12 +18,6 @@ protocol GameDelegate: AnyObject {
 
 class Game {
     
-    enum CellState {
-        case normal
-        case accesable
-        case forbidden
-    }
-    
     weak var delegate: GameDelegate?
     
     var turn: Turn = .player {
@@ -50,21 +44,6 @@ class Game {
         playerMover = PlayerMover(player: player)
         playerMover.delegate = self
     }
-    
-    func cellState(id: UUID) -> CellState {
-        if playerMover.isActive {
-            if id == playerMover.selectedCell {
-                return .normal
-            }
-            if playerMover.canMoveTo(cellId: id) {
-                return .accesable
-            }
-            return .forbidden
-        }
-        else {
-            return .normal
-        }
-    }
 }
 
 
@@ -80,8 +59,32 @@ extension Game {
 
 
 extension Game: PlayerMoverDelegate {
-    func playerMover(sender: PlayerMover, didMoveTo destination: UUID) {
+    func playerMover(sender: PlayerMover, didMovementFinished destination: UUID) {
+        field.stopNotification = true
+        (0..<field.rows).forEach { i in
+            (0..<field.columns).forEach{ j in field.cells[i][j].state = .normal }}
+        field.stopNotification = false
+        field.cellsChanged.send()
         turn = .ai
     }
     
+    func playerMover(sender: PlayerMover, didMovementStarted source: UUID) {
+        field.stopNotification = true
+        (0..<field.rows).forEach { i in
+            (0..<field.columns).forEach{ j in
+                let cellID = field.cells[i][j].id
+                if (cellID == playerMover.selectedCell) {
+                    field.cells[i][j].state = .normal
+                }
+                else if (playerMover.canMoveTo(cellId: cellID)) {
+                    field.cells[i][j].state = .accesable
+                }
+                else {
+                    field.cells[i][j].state = .forbidden
+                }
+            }
+        }
+        field.stopNotification = false
+        field.cellsChanged.send()
+    }
 }

@@ -53,7 +53,7 @@ class BattleFieldViewController: UIViewController {
             else {
                 cell.layer.borderWidth = 0
             }
-            switch game.cellState(id: cellID) {
+            switch cellModel.state {
             case.normal:
                 cell.backgroundColor = .systemGray6
             case .accesable:
@@ -135,7 +135,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         playerMover.startMovement(cellID: id)
         
         let cell = collectionView.cellForItem(at: indexPath) as! BattleFieldCollectionCell
-        let previewCell = cell.snapshotView(afterScreenUpdates: false)!
+        let previewCell = UIView()
         //previewCell.backgroundColor = .clear
         
         dragItem.previewProvider = {
@@ -148,7 +148,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
             return preview
         }
         
-        reloadSnapshot(animating: true)
+        //reloadSnapshot(animating: true)
         return [dragItem]
     }
     
@@ -192,7 +192,6 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
     func cancelMovement() {
         playerMover.resetMovement()
-        reloadSnapshot(animating: false)
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {

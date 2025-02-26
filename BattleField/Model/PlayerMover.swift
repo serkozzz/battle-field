@@ -7,7 +7,8 @@
 import Foundation
 
 protocol PlayerMoverDelegate: AnyObject {
-    func playerMover(sender: PlayerMover, didMoveTo destination: UUID)
+    func playerMover(sender: PlayerMover, didMovementFinished destination: UUID)
+    func playerMover(sender: PlayerMover, didMovementStarted source: UUID )
 }
 
 class PlayerMover {
@@ -38,6 +39,7 @@ class PlayerMover {
     
     func startMovement(cellID: UUID) {
         selectedCell = cellID
+        delegate?.playerMover(sender: self, didMovementStarted: cellID)
     }
     
     func canMoveTo(cellId: UUID) -> Bool {
@@ -62,10 +64,10 @@ class PlayerMover {
     }
     
     func moveTo(cellId: UUID) {
-        var selectedCell = selectedCell
-        resetMovement()
+        field.stopNotification = true
         field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
-        delegate?.playerMover(sender: self, didMoveTo: cellId)
+        resetMovement()
+        delegate?.playerMover(sender: self, didMovementFinished: cellId)
     }
 }

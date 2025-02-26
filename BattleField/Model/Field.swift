@@ -11,6 +11,7 @@ import Combine
 class Field {
     static var shared = Field()
     
+    var stopNotification: Bool = false
     private(set) var cellsChanged = PassthroughSubject<Void, Never>()
     
     private(set) var columns = Global.FIELD_COLUMNS
@@ -18,6 +19,7 @@ class Field {
     
     var cells: [[FieldCell]] {
         didSet {
+            if (stopNotification) { return }
             cellsChanged.send()
         }
     }
