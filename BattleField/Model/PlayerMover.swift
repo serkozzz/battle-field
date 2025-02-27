@@ -7,9 +7,6 @@
 
 import Foundation
 
-protocol PlayerMoverDelegate: AnyObject {
-    func playerMover(sender: PlayerMover, didMoveTo destination: UUID)
-}
 
 class PlayerMover {
    
@@ -17,26 +14,10 @@ class PlayerMover {
         selectedCell != nil
     }
     
-    weak var delegate: PlayerMoverDelegate?
-    
     private(set) var selectedCell: UUID?
     private(set) var movementDestination: UUID?
     private let field = Field.shared
     private let stepDistance = 1
-    
-    private var player: Player
-    init(player: Player) {
-        self.player = player
-    }
-    
-    func canStartMovement(game: Game, cellID: UUID) -> Bool {
-        if game.turn == .player,
-           let fighter = field.cell(id: cellID).fighter {
-            return player.fighters.contains { $0 === fighter }
-        }
-        return false
-
-    }
     
     func startMovement(cellID: UUID) {
         selectedCell = cellID
@@ -67,6 +48,5 @@ class PlayerMover {
         field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
         resetMovement()
-        delegate?.playerMover(sender: self, didMoveTo: cellId)
     }
 }

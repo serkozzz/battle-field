@@ -118,7 +118,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         
         let id = dataSource.itemIdentifier(for: indexPath)!
         
-        if !playerMover.canStartMovement(game: game, cellID: id) {
+        if !game.canStartPlayerMovement(cellID: id) {
             return []
         }
         
@@ -171,7 +171,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
                 reloadSnapshot(items: itemsToReload, animating: false)
             }
             
-            if !playerMover.canMoveTo(cellId: dstItemID) {
+            if !game.canMovePlayer(to: dstItemID) {
                 return UICollectionViewDropProposal(operation: .forbidden)
             }
         }
@@ -201,6 +201,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
         playerMover.moveTo(cellId: playerMover.movementDestination!)
         reloadSnapshot()
+        game.turn = .ai
         return
     }
     

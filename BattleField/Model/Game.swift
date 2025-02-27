@@ -44,15 +44,17 @@ class Game  {
         }
         field.placeFighters(playerFighters: player.fighters, enemyFighters: aiPlayer.fighters)
         
-        playerMover = PlayerMover(player: player)
-        playerMover.delegate = self
+        playerMover = PlayerMover()
     }
     
     func cellState(id: UUID) -> CellState {
         if playerMover.isActive {
-            if id == playerMover.selectedCell {
+            var fighter = field.cell(id: id).fighter
+            if let fighter,
+               player.fighters.contains(where: {$0 === fighter}) {
                 return .normal
             }
+            
             if playerMover.canMoveTo(cellId: id) {
                 return .accesable
             }
@@ -75,10 +77,20 @@ extension Game {
     }
 }
 
-
-extension Game: PlayerMoverDelegate {
-    func playerMover(sender: PlayerMover, didMoveTo destination: UUID) {
-        turn = .ai
+//MARK: Player Movement
+extension Game {
+    func canStartPlayerMovement(cellID: UUID) -> Bool {
+        if let fighter = field.cell(id: cellID).fighter {
+            return player.fighters.contains { $0 === fighter }
+        }
+        return false
     }
     
+    func canMovePlayer(to cellID: UUID) -> Bool {
+        if let fighter = field.cell(id: cellID).fighter,
+           player.fighters.contains(where: { $0 === fighter }) {
+            return false
+        }
+        return playerMover.canMoveTo(cellId: cellID)
+    }
 }
