@@ -42,7 +42,7 @@ class BattleFieldViewController: UIViewController {
             if (game.getPlayerMovementDestination() == cellID) {
                 //cell.backgroundColor = .blue
                 cell.layer.borderWidth = 2
-                cell.layer.borderColor = UIColor.black.cgColor
+                cell.layer.borderColor = cellModel.fighter != nil ? UIColor.red.cgColor : UIColor.black.cgColor
             }
             else {
                 cell.layer.borderWidth = 0
