@@ -35,7 +35,7 @@ class PlayerMover {
         return false
     }
     
-    func setMovementDestinaiton(cellID: UUID) {
+    func setMovementDestinaiton(cellID: UUID?) {
         movementDestination = cellID
     }
     

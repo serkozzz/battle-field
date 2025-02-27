@@ -98,9 +98,7 @@ extension Game {
     
     func startPlayerMovement(cellID: UUID) { playerMover.startMovement(cellID: cellID) }
     
-    func setPlayerMovementDestinaiton(cellID: UUID) { playerMover.setMovementDestinaiton(cellID: cellID) }
-    
-    func getPlayerMovementSource() -> UUID? { playerMover.selectedCell }
+    func setPlayerMovementDestinaiton(cellID: UUID?) { playerMover.setMovementDestinaiton(cellID: cellID) }
     
     func getPlayerMovementDestination() -> UUID? { playerMover.movementDestination }
  

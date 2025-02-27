@@ -151,24 +151,23 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         
         guard let dstIdxPath = destinationIndexPath else { return UICollectionViewDropProposal(operation: .forbidden) }
         
-        let srcItemID = session.localDragSession!.items.first!.localObject as! UUID
         let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
         
-        if dstItemID != srcItemID && dstItemID != game.getPlayerMovementDestination()  {
-            var itemsToReload: [UUID] = []
-            if let prevDst = game.getPlayerMovementDestination() {
-                itemsToReload.append(prevDst)
-            }
-            game.setPlayerMovementDestinaiton(cellID: dstItemID)
-            itemsToReload.append(dstItemID)
-            
-            reloadSnapshot(items: itemsToReload, animating: false)
-        }
+        var resultDropProposal = UICollectionViewDropProposal(operation: .move)
+        let previousDst = game.getPlayerMovementDestination()
         
-        if !game.canMovePlayer(to: dstItemID) {
-            return UICollectionViewDropProposal(operation: .forbidden)
+        if game.canMovePlayer(to: dstItemID) {
+            game.setPlayerMovementDestinaiton(cellID: dstItemID)
         }
-        return UICollectionViewDropProposal(operation: .move)
+        else {
+            game.setPlayerMovementDestinaiton(cellID: nil)
+            resultDropProposal = UICollectionViewDropProposal(operation: .forbidden)
+        }
+            
+        if previousDst != game.getPlayerMovementDestination() {
+            reloadSnapshot(items: [previousDst, dstItemID].compactMap{$0}, animating: false)
+        }
+        return resultDropProposal
     }
     
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
