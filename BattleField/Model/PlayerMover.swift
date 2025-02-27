@@ -23,11 +23,11 @@ class PlayerMover {
         selectedCell = cellID
     }
     
-    func canMoveTo(cellId: UUID) -> Bool {
+    func canMoveTo(cellID: UUID) -> Bool {
         if let selectedCell {
             
             let selectedCellCoords = field.cellCoords(id: selectedCell)
-            let coords = field.cellCoords(id: cellId)
+            let coords = field.cellCoords(id: cellID)
             if abs(coords.0 - selectedCellCoords.0) <= stepDistance && abs(coords.1 - selectedCellCoords.1) <= stepDistance {
                 return true
             }
@@ -35,8 +35,8 @@ class PlayerMover {
         return false
     }
     
-    func setMovementDestinaiton(cellId: UUID) {
-        movementDestination = cellId
+    func setMovementDestinaiton(cellID: UUID) {
+        movementDestination = cellID
     }
     
     func resetMovement() {
@@ -44,8 +44,8 @@ class PlayerMover {
         movementDestination = nil
     }
     
-    func moveTo(cellId: UUID) {
-        field.setFighter(to: cellId, fighter: field.cell(id: selectedCell!).fighter)
+    func moveTo(cellID: UUID) {
+        field.setFighter(to: cellID, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
         resetMovement()
     }

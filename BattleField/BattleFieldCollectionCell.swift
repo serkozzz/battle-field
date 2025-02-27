@@ -14,10 +14,6 @@ class BattleFieldCollectionCell: UICollectionViewCell {
         imageView.tintColor = fighter?.imageColor
     }
     
-
-            
-
-    
     lazy var imageView: UIImageView =  {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit

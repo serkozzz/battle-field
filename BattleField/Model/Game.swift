@@ -31,7 +31,7 @@ class Game  {
             delegate?.game(sender: self, turnDidChange: turn)
         }
     }
-    private(set) var playerMover: PlayerMover!
+    private var playerMover = PlayerMover()
     
     private(set) var player = Player()
     private(set) var aiPlayer = Player()
@@ -44,18 +44,17 @@ class Game  {
         }
         field.placeFighters(playerFighters: player.fighters, enemyFighters: aiPlayer.fighters)
         
-        playerMover = PlayerMover()
     }
     
     func cellState(id: UUID) -> CellState {
         if playerMover.isActive {
-            var fighter = field.cell(id: id).fighter
+            let fighter = field.cell(id: id).fighter
             if let fighter,
                player.fighters.contains(where: {$0 === fighter}) {
                 return .normal
             }
             
-            if playerMover.canMoveTo(cellId: id) {
+            if playerMover.canMoveTo(cellID: id) {
                 return .accesable
             }
             return .forbidden
@@ -79,6 +78,9 @@ extension Game {
 
 //MARK: Player Movement
 extension Game {
+    
+    func isPlayerMovementActive() -> Bool {  return playerMover.isActive }
+    
     func canStartPlayerMovement(cellID: UUID) -> Bool {
         if let fighter = field.cell(id: cellID).fighter {
             return player.fighters.contains { $0 === fighter }
@@ -91,6 +93,18 @@ extension Game {
            player.fighters.contains(where: { $0 === fighter }) {
             return false
         }
-        return playerMover.canMoveTo(cellId: cellID)
+        return playerMover.canMoveTo(cellID: cellID)
     }
+    
+    func startPlayerMovement(cellID: UUID) { playerMover.startMovement(cellID: cellID) }
+    
+    func setPlayerMovementDestinaiton(cellID: UUID) { playerMover.setMovementDestinaiton(cellID: cellID) }
+    
+    func getPlayerMovementSource() -> UUID? { playerMover.selectedCell }
+    
+    func getPlayerMovementDestination() -> UUID? { playerMover.movementDestination }
+ 
+    func resetPlayerMovement() { playerMover.resetMovement() }
+    
+    func moveTo(cellID: UUID) { playerMover.moveTo(cellID: cellID) }
 }
