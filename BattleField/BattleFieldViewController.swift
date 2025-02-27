@@ -40,11 +40,16 @@ class BattleFieldViewController: UIViewController {
             let cellModel = Field.shared.cell(id: cellID)
             
             if (game.getPlayerMovementDestination() == cellID) {
-                //cell.backgroundColor = .blue
                 cell.layer.borderWidth = 2
-                cell.layer.borderColor = cellModel.fighter != nil ? UIColor.red.cgColor : UIColor.black.cgColor
+                cell.layer.borderColor =  UIColor.black.cgColor
+                
+                if (cellModel.fighter != nil) {
+                    cell.layer.borderColor =  UIColor.red.cgColor
+                    cell.blinkBorder()
+                }
             }
             else {
+                cell.stopBlinkBorder()
                 cell.layer.borderWidth = 0
             }
             switch game.cellState(id: cellID) {

@@ -14,6 +14,27 @@ class BattleFieldCollectionCell: UICollectionViewCell {
         imageView.tintColor = fighter?.imageColor
     }
     
+    func blinkBorder() {
+        
+        var color = layer.borderColor
+        layer.borderColor = UIColor.clear.cgColor // Начальный цвет — прозрачный
+        
+        let animation = CABasicAnimation(keyPath: "borderColor")
+        animation.fromValue = UIColor.clear.cgColor
+        animation.toValue = color
+        animation.duration = 0.5
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut) // Плавное начало и конец
+        
+        layer.add(animation, forKey: "borderBlink")
+    }
+    
+    func stopBlinkBorder() {
+        layer.removeAnimation(forKey: "borderBlink") // Удаляем анимацию по ключу
+    }
+    
+    
     lazy var imageView: UIImageView =  {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -25,12 +46,12 @@ class BattleFieldCollectionCell: UICollectionViewCell {
         super.init(frame: frame)
         setupView()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
     }
-
+    
     func setupView() {
         contentView.addSubview(imageView)
         NSLayoutConstraint.activate([
