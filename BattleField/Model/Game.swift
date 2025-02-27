@@ -39,8 +39,8 @@ class Game  {
     
     init() {
         (0..<field.rows).forEach{ _ in
-            player.fighters.append(Fighter())
-            aiPlayer.fighters.append(Fighter())
+            player.fighters.append(Fighter(imageColor: .blue))
+            aiPlayer.fighters.append(Fighter(imageColor: .red))
         }
         field.placeFighters(playerFighters: player.fighters, enemyFighters: aiPlayer.fighters)
         

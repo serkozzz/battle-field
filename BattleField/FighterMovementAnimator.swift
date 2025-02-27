@@ -31,7 +31,7 @@ class FighterMovementAnimator
         imageViewToMove.removeFromSuperview()
         collectionView.addSubview(imageViewToMove)
         imageViewToMove.frame = startFrame
-        startCollectionCell.image = nil
+        startCollectionCell.setFighter(fighter: nil)
         
         UIView.animate(withDuration: 1.0, animations: {
             imageViewToMove.frame = destFrame

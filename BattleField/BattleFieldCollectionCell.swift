@@ -9,11 +9,14 @@ import UIKit
 
 class BattleFieldCollectionCell: UICollectionViewCell {
     
-    var image: UIImage? {
-        didSet {
-            imageView.image = image
-        }
+    func setFighter(fighter: Fighter?) {
+        imageView.image = fighter != nil ? UIImage(systemName: fighter!.imageName) : nil
+        imageView.tintColor = fighter?.imageColor
     }
+    
+
+            
+
     
     lazy var imageView: UIImageView =  {
         let imageView = UIImageView()

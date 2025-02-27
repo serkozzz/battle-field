@@ -59,8 +59,7 @@ class BattleFieldViewController: UIViewController {
                 cell.backgroundColor = .init(red: 1, green: 0, blue: 0, alpha: 0.6)
             }
         
-    
-            cell.image = cellModel.fighter != nil ? UIImage(systemName: cellModel.fighter!.imageName) : nil
+            cell.setFighter(fighter: cellModel.fighter)
             return cell
         }
         applySnapshot()
