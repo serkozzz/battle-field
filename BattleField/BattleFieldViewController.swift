@@ -117,13 +117,11 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         if !game.canStartPlayerMovement(cellID: id) {
             return []
         }
+        game.startPlayerMovement(cellID: id)
         
         let itemProvider = NSItemProvider(object: NSString())
         let dragItem = UIDragItem(itemProvider: itemProvider)
-
-        
         dragItem.localObject = id
-        game.startPlayerMovement(cellID: id)
         
         let cell = collectionView.cellForItem(at: indexPath) as! BattleFieldCollectionCell
         let previewCell = cell.snapshotView(afterScreenUpdates: false)!
@@ -151,25 +149,24 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         withDestinationIndexPath destinationIndexPath: IndexPath?
     ) -> UICollectionViewDropProposal {
         
-        if let dstIdxPath = destinationIndexPath {
+        guard let dstIdxPath = destinationIndexPath else { return UICollectionViewDropProposal(operation: .forbidden) }
         
-            let srcItemID = session.localDragSession!.items.first!.localObject as! UUID
-            let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
-            
-            if dstItemID != srcItemID && dstItemID != game.getPlayerMovementDestination()  {
-                var itemsToReload: [UUID] = []
-                if let prevDst = game.getPlayerMovementDestination() {
-                    itemsToReload.append(prevDst)
-                }
-                game.setPlayerMovementDestinaiton(cellID: dstItemID)
-                itemsToReload.append(dstItemID)
-                
-                reloadSnapshot(items: itemsToReload, animating: false)
+        let srcItemID = session.localDragSession!.items.first!.localObject as! UUID
+        let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
+        
+        if dstItemID != srcItemID && dstItemID != game.getPlayerMovementDestination()  {
+            var itemsToReload: [UUID] = []
+            if let prevDst = game.getPlayerMovementDestination() {
+                itemsToReload.append(prevDst)
             }
+            game.setPlayerMovementDestinaiton(cellID: dstItemID)
+            itemsToReload.append(dstItemID)
             
-            if !game.canMovePlayer(to: dstItemID) {
-                return UICollectionViewDropProposal(operation: .forbidden)
-            }
+            reloadSnapshot(items: itemsToReload, animating: false)
+        }
+        
+        if !game.canMovePlayer(to: dstItemID) {
+            return UICollectionViewDropProposal(operation: .forbidden)
         }
         return UICollectionViewDropProposal(operation: .move)
     }
@@ -187,15 +184,17 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
+        //drop is called only for valid destination.
+        //the next check may be unneccessary, but apply gives us coordinator.destinationIndexPath as optional.
         guard let dropDestIndex = coordinator.destinationIndexPath,
-              let dropDest = dataSource.itemIdentifier(for: dropDestIndex),
-              dropDest != game.getPlayerMovementSource()
+              let dropDest = dataSource.itemIdentifier(for: dropDestIndex)
         else {
             cancelMovement()
             return
         }
     
-        game.moveTo(cellID: game.getPlayerMovementDestination()!)
+        game.setPlayerMovementDestinaiton(cellID: dropDest)
+        game.movePlayerToDestination()
         reloadSnapshot()
         game.turn = .ai
         return

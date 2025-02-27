@@ -44,8 +44,8 @@ class PlayerMover {
         movementDestination = nil
     }
     
-    func moveTo(cellID: UUID) {
-        field.setFighter(to: cellID, fighter: field.cell(id: selectedCell!).fighter)
+    func moveToDestination() {
+        field.setFighter(to: movementDestination!, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
         resetMovement()
     }

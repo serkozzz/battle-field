@@ -106,5 +106,5 @@ extension Game {
  
     func resetPlayerMovement() { playerMover.resetMovement() }
     
-    func moveTo(cellID: UUID) { playerMover.moveTo(cellID: cellID) }
+    func movePlayerToDestination() { playerMover.moveToDestination() }
 }
