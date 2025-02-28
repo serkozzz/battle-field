@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="landscape" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="852" height="393"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6xZ-9k-Hkn" userLabel="DiceArea">
+                                <rect key="frame" x="59" y="0.0" width="734" height="93"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qVE-0e-ZhQ">
+                                        <rect key="frame" x="307.33333333333331" y="0.0" width="119.33333333333331" height="34.333333333333336"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Roll the Dice"/>
+                                    </button>
+                                    <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jSB-jL-t0r">
+                                        <rect key="frame" x="518" y="8" width="117" height="77"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    </pickerView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="qVE-0e-ZhQ" firstAttribute="centerX" secondItem="6xZ-9k-Hkn" secondAttribute="centerX" id="BN8-oI-2rS"/>
+                                    <constraint firstAttribute="height" constant="93" id="XbH-e5-9Ia"/>
+                                    <constraint firstItem="qVE-0e-ZhQ" firstAttribute="top" secondItem="6xZ-9k-Hkn" secondAttribute="top" id="dtM-Cw-4eA"/>
+                                </constraints>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="8P7-uN-jcf">
+                                <rect key="frame" x="59" y="93" width="734" height="279"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xMR-3o-QfA" userLabel="PlayerImageView">
+                                        <rect key="frame" x="0.0" y="0.0" width="367" height="279"/>
+                                    </imageView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dO6-9Q-V2P" userLabel="EnemyImageView">
+                                        <rect key="frame" x="367" y="0.0" width="367" height="279"/>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="8P7-uN-jcf" firstAttribute="top" secondItem="6xZ-9k-Hkn" secondAttribute="bottom" id="3xy-14-19y"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="8P7-uN-jcf" secondAttribute="bottom" id="J9H-gD-oK6"/>
+                            <constraint firstItem="6xZ-9k-Hkn" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="UWT-Mf-bYJ"/>
+                            <constraint firstItem="8P7-uN-jcf" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="c85-Rb-ajF"/>
+                            <constraint firstItem="8P7-uN-jcf" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="hJ6-gr-2vl"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="6xZ-9k-Hkn" secondAttribute="trailing" id="oqe-52-umB"/>
+                            <constraint firstItem="6xZ-9k-Hkn" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="s71-an-8as"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="130.98591549295776" y="-28.244274809160306"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -95,6 +95,10 @@ class BattleFieldViewController: UIViewController {
 
 
 extension BattleFieldViewController: GameDelegate {
+    func game(sender: Game, battleStarted: Battle) {
+        
+    }
+    
     func game(sender: Game, turnDidChange turn: Turn) {
         if (turn == .ai) {
             makeAITurn()

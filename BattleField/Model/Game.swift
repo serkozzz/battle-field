@@ -14,6 +14,7 @@ enum Turn {
 
 protocol GameDelegate: AnyObject {
     func game(sender: Game, turnDidChange: Turn)
+    func game(sender: Game, battleStarted: Battle)
 }
 
 class Game  {
@@ -104,5 +105,16 @@ extension Game {
  
     func resetPlayerMovement() { playerMover.resetMovement() }
     
-    func movePlayerToDestination() { playerMover.moveToDestination() }
+    func movePlayerToDestination() {
+        var cellDest = field.cell(id: playerMover.movementDestination!)
+        if aiPlayer.fighters.contains(where: { $0 === cellDest.fighter }) {
+            var playerFighter = field.cell(id: playerMover.selectedCell!).fighter!
+            var enemyFighter = field.cell(id: playerMover.movementDestination!).fighter!
+            var battle = Battle(playerFighter: playerFighter, enemyFighter: enemyFighter)
+            delegate?.game(sender: self, battleStarted: battle)
+        }
+        else {
+            playerMover.moveToDestination()
+        }
+    }
 }

@@ -23,6 +23,11 @@
 		9D638DDD2D6E41F600F2FA25 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DDC2D6E41F200F2FA25 /* Player.swift */; };
 		9D638DDF2D6E454800F2FA25 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DDE2D6E454400F2FA25 /* Global.swift */; };
 		9D638DE12D6E529500F2FA25 /* FighterMovementAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */; };
+		9D638DE32D70E5EF00F2FA25 /* Dice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DE22D70E5E400F2FA25 /* Dice.swift */; };
+		9D638DE52D70E63600F2FA25 /* Battle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DE42D70E63000F2FA25 /* Battle.swift */; };
+		9D638DE72D7109DE00F2FA25 /* BattleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DE62D7109D600F2FA25 /* BattleViewController.swift */; };
+		9D638DE92D710AE600F2FA25 /* Battle.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D638DE82D710AE600F2FA25 /* Battle.storyboard */; };
+		9D638DEB2D710FA200F2FA25 /* DialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DEA2D710F9A00F2FA25 /* DialViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +49,11 @@
 		9D638DDC2D6E41F200F2FA25 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		9D638DDE2D6E454400F2FA25 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterMovementAnimator.swift; sourceTree = "<group>"; };
+		9D638DE22D70E5E400F2FA25 /* Dice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice.swift; sourceTree = "<group>"; };
+		9D638DE42D70E63000F2FA25 /* Battle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Battle.swift; sourceTree = "<group>"; };
+		9D638DE62D7109D600F2FA25 /* BattleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleViewController.swift; sourceTree = "<group>"; };
+		9D638DE82D710AE600F2FA25 /* Battle.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Battle.storyboard; sourceTree = "<group>"; };
+		9D638DEA2D710F9A00F2FA25 /* DialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +97,9 @@
 				9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */,
 				9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */,
 				9D638DC52D6983A900F2FA25 /* BattleFieldViewController.swift */,
+				9D638DE62D7109D600F2FA25 /* BattleViewController.swift */,
+				9D638DEA2D710F9A00F2FA25 /* DialViewController.swift */,
+				9D638DE82D710AE600F2FA25 /* Battle.storyboard */,
 			);
 			path = BattleField;
 			sourceTree = "<group>";
@@ -94,6 +107,8 @@
 		9D638DCF2D6983B000F2FA25 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9D638DE42D70E63000F2FA25 /* Battle.swift */,
+				9D638DE22D70E5E400F2FA25 /* Dice.swift */,
 				9D638DDC2D6E41F200F2FA25 /* Player.swift */,
 				9D638DDA2D6E40D600F2FA25 /* AIController.swift */,
 				9D638DD82D6E35C900F2FA25 /* PlayerMover.swift */,
@@ -166,6 +181,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D638DE92D710AE600F2FA25 /* Battle.storyboard in Resources */,
 				9D638DC72D6983A900F2FA25 /* Assets.xcassets in Resources */,
 				9D638DC92D6983A900F2FA25 /* LaunchScreen.storyboard in Resources */,
 				9D638DCA2D6983A900F2FA25 /* Main.storyboard in Resources */,
@@ -179,6 +195,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D638DE72D7109DE00F2FA25 /* BattleViewController.swift in Sources */,
 				9D638DDD2D6E41F600F2FA25 /* Player.swift in Sources */,
 				9D638DD12D6983C800F2FA25 /* Field.swift in Sources */,
 				9D638DCB2D6983A900F2FA25 /* AppDelegate.swift in Sources */,
@@ -187,10 +204,13 @@
 				9D638DE12D6E529500F2FA25 /* FighterMovementAnimator.swift in Sources */,
 				9D638DD72D6D5BE600F2FA25 /* BattleFieldCollectionCell.swift in Sources */,
 				9D638DCD2D6983A900F2FA25 /* SceneDelegate.swift in Sources */,
+				9D638DE52D70E63600F2FA25 /* Battle.swift in Sources */,
+				9D638DE32D70E5EF00F2FA25 /* Dice.swift in Sources */,
 				9D638DCE2D6983A900F2FA25 /* BattleFieldViewController.swift in Sources */,
 				9D638DDF2D6E454800F2FA25 /* Global.swift in Sources */,
 				9D638DD92D6E35DD00F2FA25 /* PlayerMover.swift in Sources */,
 				9D638DD32D69845400F2FA25 /* FieldCell.swift in Sources */,
+				9D638DEB2D710FA200F2FA25 /* DialViewController.swift in Sources */,
 				9D638DDB2D6E40DF00F2FA25 /* AIController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
