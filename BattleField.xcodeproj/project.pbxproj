@@ -20,7 +20,7 @@
 		9D638DD72D6D5BE600F2FA25 /* BattleFieldCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */; };
 		9D638DD92D6E35DD00F2FA25 /* PlayerMover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DD82D6E35C900F2FA25 /* PlayerMover.swift */; };
 		9D638DDB2D6E40DF00F2FA25 /* AIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DDA2D6E40D600F2FA25 /* AIController.swift */; };
-		9D638DDD2D6E41F600F2FA25 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DDC2D6E41F200F2FA25 /* Player.swift */; };
+		9D638DDD2D6E41F600F2FA25 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DDC2D6E41F200F2FA25 /* Character.swift */; };
 		9D638DDF2D6E454800F2FA25 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DDE2D6E454400F2FA25 /* Global.swift */; };
 		9D638DE12D6E529500F2FA25 /* FighterMovementAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */; };
 		9D638DE32D70E5EF00F2FA25 /* Dice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DE22D70E5E400F2FA25 /* Dice.swift */; };
@@ -29,6 +29,7 @@
 		9D638DE92D710AE600F2FA25 /* Battle.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D638DE82D710AE600F2FA25 /* Battle.storyboard */; };
 		9D638DEB2D710FA200F2FA25 /* DialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DEA2D710F9A00F2FA25 /* DialView.swift */; };
 		9D638DED2D71557800F2FA25 /* AnimationCurves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DEC2D71556E00F2FA25 /* AnimationCurves.swift */; };
+		9DE6452B2D725F0F00238FDB /* GameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452A2D725F0600238FDB /* GameContext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,7 +48,7 @@
 		9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleFieldCollectionCell.swift; sourceTree = "<group>"; };
 		9D638DD82D6E35C900F2FA25 /* PlayerMover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMover.swift; sourceTree = "<group>"; };
 		9D638DDA2D6E40D600F2FA25 /* AIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIController.swift; sourceTree = "<group>"; };
-		9D638DDC2D6E41F200F2FA25 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		9D638DDC2D6E41F200F2FA25 /* Character.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
 		9D638DDE2D6E454400F2FA25 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FighterMovementAnimator.swift; sourceTree = "<group>"; };
 		9D638DE22D70E5E400F2FA25 /* Dice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice.swift; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		9D638DE82D710AE600F2FA25 /* Battle.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Battle.storyboard; sourceTree = "<group>"; };
 		9D638DEA2D710F9A00F2FA25 /* DialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialView.swift; sourceTree = "<group>"; };
 		9D638DEC2D71556E00F2FA25 /* AnimationCurves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCurves.swift; sourceTree = "<group>"; };
+		9DE6452A2D725F0600238FDB /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,10 +114,11 @@
 			children = (
 				9D638DE42D70E63000F2FA25 /* Battle.swift */,
 				9D638DE22D70E5E400F2FA25 /* Dice.swift */,
-				9D638DDC2D6E41F200F2FA25 /* Player.swift */,
+				9D638DDC2D6E41F200F2FA25 /* Character.swift */,
 				9D638DDA2D6E40D600F2FA25 /* AIController.swift */,
-				9D638DD82D6E35C900F2FA25 /* PlayerMover.swift */,
+				9DE6452A2D725F0600238FDB /* GameContext.swift */,
 				9D638DD42D6CBAF000F2FA25 /* Game.swift */,
+				9D638DD82D6E35C900F2FA25 /* PlayerMover.swift */,
 				9D638DD22D69845200F2FA25 /* FieldCell.swift */,
 				9D638DD02D6983BE00F2FA25 /* Field.swift */,
 				9D638DBE2D6983A900F2FA25 /* Fighter.swift */,
@@ -199,7 +202,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D638DE72D7109DE00F2FA25 /* BattleViewController.swift in Sources */,
-				9D638DDD2D6E41F600F2FA25 /* Player.swift in Sources */,
+				9D638DDD2D6E41F600F2FA25 /* Character.swift in Sources */,
 				9D638DD12D6983C800F2FA25 /* Field.swift in Sources */,
 				9D638DCB2D6983A900F2FA25 /* AppDelegate.swift in Sources */,
 				9D638DD52D6CBAF600F2FA25 /* Game.swift in Sources */,
@@ -209,6 +212,7 @@
 				9D638DCD2D6983A900F2FA25 /* SceneDelegate.swift in Sources */,
 				9D638DE52D70E63600F2FA25 /* Battle.swift in Sources */,
 				9D638DED2D71557800F2FA25 /* AnimationCurves.swift in Sources */,
+				9DE6452B2D725F0F00238FDB /* GameContext.swift in Sources */,
 				9D638DE32D70E5EF00F2FA25 /* Dice.swift in Sources */,
 				9D638DCE2D6983A900F2FA25 /* BattleFieldViewController.swift in Sources */,
 				9D638DDF2D6E454800F2FA25 /* Global.swift in Sources */,

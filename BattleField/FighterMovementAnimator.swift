@@ -20,7 +20,7 @@ class FighterMovementAnimator
     
     func animateMovement(fighter: Fighter, to destcellID: UUID, completed: (() -> Void)? = nil)
     {
-        let field = Field.shared
+        let field = GameContext.shared.field
         let startcellID = field.cell(withFighter: fighter)!
         let startCollectionCell = collectionView.cellForItem(at: dataSource.indexPath(for: startcellID)!) as! BattleFieldCollectionCell
         let destCollectionCell = collectionView.cellForItem(at: dataSource.indexPath(for: destcellID)!) as! BattleFieldCollectionCell

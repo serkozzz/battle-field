@@ -8,12 +8,19 @@
 import Foundation
 
 
-class PlayerMover {
+class CharacterMover {
     
     private(set) var selectedCell: UUID?
     private(set) var movementDestination: UUID?
-    private let field = Field.shared
+    private let field = GameContext.shared.field
     private let stepDistance = 1
+    
+    init() { }
+    
+    init(startCellID: UUID, destinationCellID: UUID) {
+        selectedCell = startCellID
+        movementDestination = destinationCellID
+    }
     
     func startMovement(cellID: UUID) {
         selectedCell = cellID

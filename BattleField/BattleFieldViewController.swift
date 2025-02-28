@@ -16,13 +16,16 @@ class BattleFieldViewController: UIViewController {
     
     var game = Game()
     var aiController: AIController!
+   
     var aiMotionAnimator: FighterMovementAnimator!
+    
+    private var field = GameContext.shared.field
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         game.delegate = self
-        aiController = AIController(aiPlayer: game.aiPlayer)
+        aiController = AIController(aiPlayer: GameContext.shared.aiPlayer)
                 
         collectionView.collectionViewLayout = createLayout()
         collectionView.register(BattleFieldCollectionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -37,7 +40,7 @@ class BattleFieldViewController: UIViewController {
             guard let self = self else { return nil }
             
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BattleFieldCollectionCell
-            let cellModel = Field.shared.cell(id: cellID)
+            let cellModel = field.cell(id: cellID)
             
             if (game.getPlayerMovementDestination() == cellID) {
                 cell.layer.borderWidth = 2
@@ -72,7 +75,7 @@ class BattleFieldViewController: UIViewController {
     func applySnapshot(){
         var snapshot = NSDiffableDataSourceSnapshot<Int, UUID>()
         snapshot.appendSections([0])
-        snapshot.appendItems(Field.shared.flattenedCells.map { $0.id })
+        snapshot.appendItems(field.flattenedCells.map { $0.id })
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
@@ -104,7 +107,7 @@ extension BattleFieldViewController: GameDelegate {
     
     func game(sender: Game, didPlayerMove:()) {
         reloadSnapshot()
-        game.turn = .ai
+        game.toogleTurn()
     }
     
     func game(sender: Game, didBattleStart battle: Battle) {
@@ -121,7 +124,7 @@ extension BattleFieldViewController: GameDelegate {
     func makeAITurn() {
         //reloadSnapshot()
         let fighter = aiController.selectFighter()
-        let src = Field.shared.cell(withFighter: fighter)!
+        let src = field.cell(withFighter: fighter)!
         let dest = aiController.chooseMovementDestination(for: fighter)
         aiMotionAnimator.animateMovement(fighter: fighter, to: dest) { [weak self] in
             self?.game.moveAI(fighter: fighter, to: dest)
@@ -216,8 +219,6 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
         game.setPlayerMovementDestinaiton(cellID: dropDest)
         game.movePlayerToDestination()
-//        reloadSnapshot()
-//        game.turn = .ai
         return
     }
     
@@ -229,7 +230,7 @@ extension BattleFieldViewController: BattleViewControllerDelegate {
         controller.dismiss(animated: true) { [self] in
             game.finishBattle(battle: battle)
             reloadSnapshot()
-            game.turn = (game.turn == .player ) ? .ai : .player
+            game.toogleTurn()
         }
     }
     
@@ -243,8 +244,8 @@ extension BattleFieldViewController {
         return UICollectionViewCompositionalLayout { [weak self] sectionIndex, layoutEnvironment in
             guard let self else { return nil }
             
-            let itemWidth = 1 / CGFloat( Field.shared.columns)
-            let itemHeight = 1 / CGFloat(Field.shared.rows)
+            let itemWidth = 1 / CGFloat(field.columns)
+            let itemHeight = 1 / CGFloat(field.rows)
             
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(itemWidth), heightDimension: .fractionalHeight(1))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)

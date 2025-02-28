@@ -9,7 +9,6 @@ import Foundation
 
 
 class Field {
-    static var shared = Field()
     
     private(set) var columns = Global.FIELD_COLUMNS
     private(set) var rows = Global.FIELD_ROWS

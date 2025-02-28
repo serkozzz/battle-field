@@ -5,6 +5,6 @@
 //  Created by Sergey Kozlov on 25.02.2025.
 //
 
-class Player {
+class Character {
     var fighters: [Fighter] = []
 }
