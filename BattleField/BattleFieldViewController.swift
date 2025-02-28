@@ -96,7 +96,18 @@ class BattleFieldViewController: UIViewController {
 
 extension BattleFieldViewController: GameDelegate {
     
-    func game(sender: Game, battleStarted battle: Battle) {
+    func game(sender: Game, didTurnChange turn: Turn) {
+        if (turn == .ai) {
+            makeAITurn()
+        }
+    }
+    
+    func game(sender: Game, didPlayerMove:()) {
+        reloadSnapshot()
+        game.turn = .ai
+    }
+    
+    func game(sender: Game, didBattleStart battle: Battle) {
         let storyboard = UIStoryboard(name: "Battle", bundle: nil)
         let battleVC = storyboard.instantiateInitialViewController { coder in
             return BattleViewController(coder: coder, battleModel: battle)
@@ -105,12 +116,7 @@ extension BattleFieldViewController: GameDelegate {
         battleVC?.modalPresentationStyle = .fullScreen
         present(battleVC!, animated: true)
     }
-    
-    func game(sender: Game, turnDidChange turn: Turn) {
-        if (turn == .ai) {
-            makeAITurn()
-        }
-    }
+
     
     func makeAITurn() {
         //reloadSnapshot()
@@ -187,9 +193,9 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
-        if (game.isPlayerMovementActive()) {
-            cancelMovement()
-        }
+//        if (game.isPlayerMovementActive()) {
+//            cancelMovement()
+//        }
     }
 
     
@@ -210,8 +216,8 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
         game.setPlayerMovementDestinaiton(cellID: dropDest)
         game.movePlayerToDestination()
-        reloadSnapshot()
-        game.turn = .ai
+//        reloadSnapshot()
+//        game.turn = .ai
         return
     }
     

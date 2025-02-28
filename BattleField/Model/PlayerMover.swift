@@ -9,10 +9,6 @@ import Foundation
 
 
 class PlayerMover {
-   
-    var isActive: Bool {
-        selectedCell != nil
-    }
     
     private(set) var selectedCell: UUID?
     private(set) var movementDestination: UUID?
@@ -39,14 +35,8 @@ class PlayerMover {
         movementDestination = cellID
     }
     
-    func resetMovement() {
-        selectedCell = nil
-        movementDestination = nil
-    }
-    
     func moveToDestination() {
         field.setFighter(to: movementDestination!, fighter: field.cell(id: selectedCell!).fighter)
         field.setFighter(to: selectedCell!, fighter: nil)
-        resetMovement()
     }
 }

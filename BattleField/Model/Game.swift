@@ -13,8 +13,9 @@ enum Turn {
 }
 
 protocol GameDelegate: AnyObject {
-    func game(sender: Game, turnDidChange turn: Turn)
-    func game(sender: Game, battleStarted battle: Battle)
+    func game(sender: Game, didTurnChange turn: Turn)
+    func game(sender: Game, didPlayerMove: ())
+    func game(sender: Game, didBattleStart battle: Battle)
 }
 
 class Game  {
@@ -29,10 +30,10 @@ class Game  {
     
     var turn: Turn = .player {
         didSet {
-            delegate?.game(sender: self, turnDidChange: turn)
+            delegate?.game(sender: self, didTurnChange: turn)
         }
     }
-    private var playerMover = PlayerMover()
+    private var playerMover: PlayerMover!
     
     private(set) var player = Player()
     private(set) var aiPlayer = Player()
@@ -48,7 +49,7 @@ class Game  {
     }
     
     func cellState(id: UUID) -> CellState {
-        if playerMover.isActive {
+        if playerMover != nil {
             let fighter = field.cell(id: id).fighter
             if let fighter,
                player.fighters.contains(where: {$0 === fighter}) {
@@ -71,11 +72,11 @@ class Game  {
 extension Game {
     func moveAI(fighter: Fighter, to destID: UUID) {
         let sourceCellID = field.cell(withFighter: fighter)!
-        var destCell = field.cell(id: destID)
+        let destCell = field.cell(id: destID)
         if (player.fighters.contains(where: {$0 === destCell.fighter })) {
-            var sourceCell = field.cell(id: sourceCellID)
+            let sourceCell = field.cell(id: sourceCellID)
             let battle = Battle(playerFighter: destCell.fighter!, enemyFighter: sourceCell.fighter!)
-            delegate?.game(sender: self, battleStarted: battle)
+            delegate?.game(sender: self, didBattleStart: battle)
             return
         }
         
@@ -88,7 +89,7 @@ extension Game {
 //MARK: Player Movement
 extension Game {
     
-    func isPlayerMovementActive() -> Bool {  return playerMover.isActive }
+    func isPlayerMovementActive() -> Bool {  return playerMover != nil }
     
     func canStartPlayerMovement(cellID: UUID) -> Bool {
         if let fighter = field.cell(id: cellID).fighter {
@@ -105,13 +106,16 @@ extension Game {
         return playerMover.canMoveTo(cellID: cellID)
     }
     
-    func startPlayerMovement(cellID: UUID) { playerMover.startMovement(cellID: cellID) }
+    func startPlayerMovement(cellID: UUID) {
+        playerMover = PlayerMover()
+        playerMover.startMovement(cellID: cellID)
+    }
     
     func setPlayerMovementDestinaiton(cellID: UUID?) { playerMover.setMovementDestinaiton(cellID: cellID) }
     
-    func getPlayerMovementDestination() -> UUID? { playerMover.movementDestination }
+    func getPlayerMovementDestination() -> UUID? { playerMover?.movementDestination }
  
-    func resetPlayerMovement() { playerMover.resetMovement() }
+    func resetPlayerMovement() { playerMover = nil }
     
     func movePlayerToDestination() {
         let cellDest = field.cell(id: playerMover.movementDestination!)
@@ -119,11 +123,18 @@ extension Game {
             let playerFighter = field.cell(id: playerMover.selectedCell!).fighter!
             let enemyFighter = field.cell(id: playerMover.movementDestination!).fighter!
             let battle = Battle(playerFighter: playerFighter, enemyFighter: enemyFighter)
-            delegate?.game(sender: self, battleStarted: battle)
+            resetPlayerMovement()
+            delegate?.game(sender: self, didBattleStart: battle)
         }
         else {
-            playerMover.moveToDestination()
+            finishPlayerMovement()
         }
+    }
+    
+    private func finishPlayerMovement() {
+        playerMover.moveToDestination()
+        playerMover = nil
+        delegate?.game(sender: self, didPlayerMove: ())
     }
 }
 
@@ -142,8 +153,11 @@ extension Game {
         
         if (turn == .player) {
             if (battle.winner === battle.playerFighter) {
+                playerMover = PlayerMover()
+                playerMover.startMovement(cellID: field.cell(withFighter: battle.playerFighter)!)
+                playerMover.setMovementDestinaiton(cellID: field.cell(withFighter: battle.enemyFighter))
                 removeFighter(player: aiPlayer, fighter: battle.enemyFighter)
-                playerMover.moveToDestination()
+                finishPlayerMovement()
             }
             else {
                 removeFighter(player: player, fighter: battle.playerFighter)
