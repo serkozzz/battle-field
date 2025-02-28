@@ -36,11 +36,11 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     // Состояние для физической прокрутки
     private var displayLink: CADisplayLink?
     private var velocity: CGFloat = 0.0
-    private var isDecelerating: Bool = false
-    private var deceleration: CGFloat = 0.95
     private var targetRow: Int = 0
     private var rollTime = 5
+    private var lastTimeSpan: TimeInterval?
     private var rollProgress = 0.0
+    private var animationCurve: AnimationCurveFunction!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,15 +87,14 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     }
     
-    // Программная прокрутка с имитацией физики (замедление)
-    func spinPickerWheel(to targetRow: Int, initialVelocity: CGFloat = 1, deceleration: CGFloat = 0.95) {
+
+    func spinPickerWheel(to targetRow: Int, initialVelocity: CGFloat = 1) {
         
+        lastTimeSpan = nil
         rollProgress = 0.0
         self.targetRow = targetRow
         pickerView.selectRow(0, inComponent: 0, animated: false)
         velocity = initialVelocity
-        isDecelerating = false
-        self.deceleration = deceleration
         
         stopSpinAnimation()
         
@@ -112,6 +111,14 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     // Метод для обновления анимации физической прокрутки
     @objc func updateSpin(_ displayLink: CADisplayLink) {
 
+        guard let lastTimeSpan else {
+            lastTimeSpan = displayLink.timestamp
+            return
+        }
+        let deltaTime = displayLink.timestamp - lastTimeSpan
+    
+        
+        
         let currentRow = pickerView.selectedRow(inComponent: 0)
         if (currentRow == targetRow) {
             stopSpinAnimation()
@@ -127,3 +134,45 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         stopSpinAnimation()
     }
 }
+
+
+
+//interpolation by 2 points: (0,0) and (x,y)
+//it is so cool that you need calculate only one factor(a) to get math func passing trough (0,0) and particular (x,y)
+//when apply it for animation - x is time
+
+
+protocol AnimationCurveFunction {
+    func y(x: Float) -> Float
+    init(asInterpolationWith point: CGPoint)
+}
+
+struct SqrtFunction: AnimationCurveFunction {
+    //y = a * sqrt(x)
+    
+    var a: Float
+    
+    init(asInterpolationWith point: CGPoint) {
+        a = Float(point.y / sqrt(point.x))
+    }
+    
+    func y(x: Float) -> Float {
+        return a * sqrt(x)
+    }
+}
+
+struct LinearFunction: AnimationCurveFunction {
+    //y = a * x
+    
+    var a: Float
+    
+    init(asInterpolationWith point: CGPoint) {
+        a = Float(point.y / point.x)
+    }
+    
+    func y(x: Float) -> Float {
+        return a * x
+    }
+}
+
+
