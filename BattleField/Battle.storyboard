@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="landscape" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Battle View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" sceneMemberID="viewController">
+                <viewController id="Y6W-OH-hqX" customClass="BattleViewController" customModule="BattleField" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="852" height="393"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -23,15 +23,24 @@
                                         <rect key="frame" x="307.33333333333331" y="0.0" width="119.33333333333331" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Roll the Dice"/>
+                                        <connections>
+                                            <action selector="roll:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="emT-ds-gD9"/>
+                                        </connections>
                                     </button>
-                                    <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jSB-jL-t0r">
-                                        <rect key="frame" x="518" y="8" width="117" height="77"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                    </pickerView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VuY-OT-5gQ" customClass="DialView" customModule="BattleField" customModuleProvider="target">
+                                        <rect key="frame" x="494" y="0.0" width="240" height="93"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="240" id="gx9-QA-phE"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="VuY-OT-5gQ" firstAttribute="top" secondItem="6xZ-9k-Hkn" secondAttribute="top" id="0u2-dY-NsP"/>
                                     <constraint firstItem="qVE-0e-ZhQ" firstAttribute="centerX" secondItem="6xZ-9k-Hkn" secondAttribute="centerX" id="BN8-oI-2rS"/>
+                                    <constraint firstAttribute="trailing" secondItem="VuY-OT-5gQ" secondAttribute="trailing" id="Rfa-Lb-DBd"/>
+                                    <constraint firstAttribute="bottom" secondItem="VuY-OT-5gQ" secondAttribute="bottom" id="WnB-ZI-THt"/>
                                     <constraint firstAttribute="height" constant="93" id="XbH-e5-9Ia"/>
                                     <constraint firstItem="qVE-0e-ZhQ" firstAttribute="top" secondItem="6xZ-9k-Hkn" secondAttribute="top" id="dtM-Cw-4eA"/>
                                 </constraints>
@@ -60,6 +69,11 @@
                             <constraint firstItem="6xZ-9k-Hkn" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="s71-an-8as"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="dialView" destination="VuY-OT-5gQ" id="C9A-a0-Us6"/>
+                        <outlet property="enemyImageView" destination="dO6-9Q-V2P" id="xQD-bc-sAI"/>
+                        <outlet property="playerImageView" destination="xMR-3o-QfA" id="u28-A1-KUY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -7,7 +7,13 @@
 
 import UIKit
 
-class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+protocol DialViewDelegate: AnyObject {
+    func dialView(_ dialView: DialView, didRollFinished: Void)
+}
+
+class DialView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    var delegate: DialViewDelegate?
     
     private let pickerView: UIPickerView = {
         let picker = UIPickerView()
@@ -15,17 +21,7 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
         return picker
     }()
     
-    private lazy var startButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Start", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addAction(UIAction() { _ in
-            self.spinPickerWheel(to: 6*6)
-        }, for: .touchUpInside)
-        return button
-    }()
-    
-    // Базовые числа (1–6)
+
     private let baseNumbers = [1, 2, 3, 4, 5, 6]
     private let numberOfCycles = 100 // Количество циклов для иллюзии бесконечности
     private lazy var numbers: [Int] = {
@@ -37,32 +33,31 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var displayLink: CADisplayLink?
     private var velocity: CGFloat = 0.0
     private var targetRow: Int = 0
-    private var rollTime = 5
+    private var rollTime = 2
     private var lastTimeSpan: TimeInterval?
     private var rollProgress = 0.0
     private var animationCurve: AnimationCurveFunction!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupPickerView()
-
-        view.addSubview(startButton)
-        NSLayoutConstraint.activate([
-            startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            startButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
-            
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
     }
     
-    private func setupPickerView() {
-        view.addSubview(pickerView)
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func setupView() {
+        addSubview(pickerView)
         pickerView.delegate = self
         pickerView.dataSource = self
         
         NSLayoutConstraint.activate([
-            pickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pickerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            pickerView.widthAnchor.constraint(equalToConstant: 200),
-            pickerView.heightAnchor.constraint(equalToConstant: 150)
+            pickerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            pickerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            pickerView.topAnchor.constraint(equalTo: topAnchor),
+            pickerView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
         // Устанавливаем начальное значение в середине для симметрии
@@ -88,16 +83,17 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     }
     
 
-    func spinPickerWheel(to targetRow: Int, initialVelocity: CGFloat = 1) {
+    func roll(to row: Int, initialVelocity: CGFloat = 1) {
         
         lastTimeSpan = nil
         rollProgress = 0.0
-        self.targetRow = targetRow
+        self.targetRow = baseNumbers.count * 10 + row - 1
         pickerView.selectRow(0, inComponent: 0, animated: false)
         velocity = initialVelocity
         
         stopSpinAnimation()
         
+        animationCurve = SqrtFunction(asInterpolationWith: CGPoint(x: rollTime, y: targetRow))
         displayLink = CADisplayLink(target: self, selector: #selector(updateSpin))
         displayLink?.add(to: .main, forMode: .common)
     }
@@ -109,22 +105,23 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     }
     
     // Метод для обновления анимации физической прокрутки
-    @objc func updateSpin(_ displayLink: CADisplayLink) {
+     @objc func updateSpin(_ displayLink: CADisplayLink) {
 
         guard let lastTimeSpan else {
             lastTimeSpan = displayLink.timestamp
             return
         }
-        let deltaTime = displayLink.timestamp - lastTimeSpan
-    
-        
         
         let currentRow = pickerView.selectedRow(inComponent: 0)
         if (currentRow == targetRow) {
             stopSpinAnimation()
+            delegate?.dialView(self, didRollFinished: Void())
         }
         
-        rollProgress += velocity
+        
+        let deltaTime = displayLink.timestamp - lastTimeSpan
+        let rollProgress = animationCurve.y(x: Float(deltaTime))
+
         let resultRow = (Int(rollProgress) < targetRow) ? Int(rollProgress) : targetRow
         pickerView.selectRow(resultRow, inComponent: 0, animated: false)
 
@@ -137,42 +134,6 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 
 
 
-//interpolation by 2 points: (0,0) and (x,y)
-//it is so cool that you need calculate only one factor(a) to get math func passing trough (0,0) and particular (x,y)
-//when apply it for animation - x is time
 
-
-protocol AnimationCurveFunction {
-    func y(x: Float) -> Float
-    init(asInterpolationWith point: CGPoint)
-}
-
-struct SqrtFunction: AnimationCurveFunction {
-    //y = a * sqrt(x)
-    
-    var a: Float
-    
-    init(asInterpolationWith point: CGPoint) {
-        a = Float(point.y / sqrt(point.x))
-    }
-    
-    func y(x: Float) -> Float {
-        return a * sqrt(x)
-    }
-}
-
-struct LinearFunction: AnimationCurveFunction {
-    //y = a * x
-    
-    var a: Float
-    
-    init(asInterpolationWith point: CGPoint) {
-        a = Float(point.y / point.x)
-    }
-    
-    func y(x: Float) -> Float {
-        return a * x
-    }
-}
 
 

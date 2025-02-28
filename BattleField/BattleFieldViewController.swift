@@ -95,8 +95,15 @@ class BattleFieldViewController: UIViewController {
 
 
 extension BattleFieldViewController: GameDelegate {
-    func game(sender: Game, battleStarted: Battle) {
-        
+    
+    func game(sender: Game, battleStarted battle: Battle) {
+        let storyboard = UIStoryboard(name: "Battle", bundle: nil)
+        let battleVC = storyboard.instantiateInitialViewController { coder in
+            return BattleViewController(coder: coder, battleModel: battle)
+        }
+        battleVC?.delegate = self
+        battleVC?.modalPresentationStyle = .fullScreen
+        present(battleVC!, animated: true)
     }
     
     func game(sender: Game, turnDidChange turn: Turn) {
@@ -211,6 +218,17 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
 }
 
+extension BattleFieldViewController: BattleViewControllerDelegate {
+    func battleViewControllerDidFinish(_ controller: BattleViewController, didFinish battle: Battle) {
+        controller.dismiss(animated: true) { [self] in
+            game.finishBattle(battle: battle)
+            reloadSnapshot()
+            game.turn = (game.turn == .player ) ? .ai : .player
+        }
+    }
+    
+    
+}
 
 
 extension BattleFieldViewController {
