@@ -39,6 +39,8 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     private var isDecelerating: Bool = false
     private var deceleration: CGFloat = 0.95
     private var targetRow: Int = 0
+    private var rollTime = 5
+    private var rollProgress = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +89,8 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     
     // Программная прокрутка с имитацией физики (замедление)
     func spinPickerWheel(to targetRow: Int, initialVelocity: CGFloat = 1, deceleration: CGFloat = 0.95) {
+        
+        rollProgress = 0.0
         self.targetRow = targetRow
         pickerView.selectRow(0, inComponent: 0, animated: false)
         velocity = initialVelocity
@@ -109,30 +113,15 @@ class DialViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
     @objc func updateSpin(_ displayLink: CADisplayLink) {
 
         let currentRow = pickerView.selectedRow(inComponent: 0)
-        if currentRow < targetRow {
-            if isDecelerating {
-                velocity *= deceleration
-                if velocity < 0.1 {
-                    velocity = 0
-                    stopSpinAnimation()
-                    return
-                }
-            }
-            
-            let rowsRemains = targetRow - currentRow
-            let rowsToMove = (Int(velocity) < rowsRemains) ? Int(velocity) : rowsRemains
-            pickerView.selectRow(currentRow + rowsToMove, inComponent: 0, animated: false)
-        } else {
+        if (currentRow == targetRow) {
             stopSpinAnimation()
         }
+        
+        rollProgress += velocity
+        let resultRow = (Int(rollProgress) < targetRow) ? Int(rollProgress) : targetRow
+        pickerView.selectRow(resultRow, inComponent: 0, animated: false)
+
     }
-    
-//    // Остановка на конкретном числе
-//    func stopSpinAnimation(at number: Int) {
-//        stopSpinAnimation()
-//        let targetRow = currentRow + (number - (numbers[currentRow % baseNumbers.count]))
-//        pickerView.selectRow(targetRow, inComponent: 0, animated: true)
-//    }
     
     deinit {
         stopSpinAnimation()
