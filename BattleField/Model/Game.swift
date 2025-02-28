@@ -14,7 +14,7 @@ enum Turn {
 
 protocol GameDelegate: AnyObject {
     func game(sender: Game, didTurnChange turn: Turn)
-    func game(sender: Game, didPlayerMove: ())
+    func game(sender: Game, didPlayerMoveFrom startID: UUID, to destID: UUID)
     func game(sender: Game, didBattleStart battle: Battle)
 }
 
@@ -134,9 +134,10 @@ extension Game {
     }
     
     private func finishPlayerMovement() {
+        var path = (characterMover.selectedCell!, characterMover.movementDestination!)
         characterMover.moveToDestination()
         characterMover = nil
-        delegate?.game(sender: self, didPlayerMove: ())
+        delegate?.game(sender: self, didPlayerMoveFrom: path.0, to: path.1)
     }
 }
 

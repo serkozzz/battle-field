@@ -92,7 +92,7 @@ class BattleFieldViewController: UIViewController {
     }
     
     @IBAction func aiTurn(_ sender: Any) {
-        makeAITurn()
+        game.toogleTurn()
     }
 }
 
@@ -105,8 +105,9 @@ extension BattleFieldViewController: GameDelegate {
         }
     }
     
-    func game(sender: Game, didPlayerMove:()) {
-        reloadSnapshot()
+    func game(sender: Game, didPlayerMoveFrom startID: UUID, to destID: UUID) {
+        let items = (game.turn == .player) ? dataSource.snapshot().itemIdentifiers : [startID, destID]
+        reloadSnapshot(items: items, animating: false)
         game.toogleTurn()
     }
     
@@ -128,7 +129,7 @@ extension BattleFieldViewController: GameDelegate {
         let dest = aiController.chooseMovementDestination(for: fighter)
         aiMotionAnimator.animateMovement(fighter: fighter, to: dest) { [weak self] in
             self?.game.moveAI(fighter: fighter, to: dest)
-            self?.reloadSnapshot(items: [src, dest], animating: false)
+            //self?.reloadSnapshot(items: [src, dest], animating: false)
         }
     }
     
