@@ -9,6 +9,7 @@ struct Battle {
     var playerFighter: Fighter
     var enemyFighter: Fighter
     var winner: Fighter?
+    
     var diceResult: Int?
     
     mutating func rollDice() -> Int {

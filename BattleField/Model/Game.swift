@@ -153,13 +153,10 @@ extension Game {
             field.cells[i][j].fighter = nil
         }
         
-        let playerCellID = field.cell(withFighter: battle.playerFighter)!
-        let enemyCellID = field.cell(withFighter: battle.enemyFighter)!
+
         if (turn == .player) {
             if (battle.winner === battle.playerFighter) {
-                characterMover = CharacterMover(startCellID: playerCellID, destinationCellID: enemyCellID)
                 removeFighter(player: aiPlayer, fighter: battle.enemyFighter)
-                finishPlayerMovement()
             }
             else {
                 removeFighter(player: player, fighter: battle.playerFighter)

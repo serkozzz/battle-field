@@ -7,7 +7,7 @@
 import UIKit
 
 protocol BattleViewControllerDelegate: AnyObject {
-    func battleViewControllerDidFinish(_ controller: BattleViewController, didFinish battle: Battle)
+    func battleViewController(_ controller: BattleViewController, didFinish battle: Battle)
 }
 
 
@@ -36,7 +36,8 @@ class BattleViewController : UIViewController, DialViewDelegate {
         let enemyImage = UIImage(systemName: battleModel.enemyFighter.imageName)
         enemyImageView.image = enemyImage
         enemyImageView.tintColor = .red
-
+        
+        delegate?.battleViewController(self, didFinish: battleModel)
     }
     
     @IBAction func roll(_ sender: Any) {
@@ -56,7 +57,7 @@ class BattleViewController : UIViewController, DialViewDelegate {
             let message = (winner === battleModel.playerFighter) ? "You win!": "You lose!"
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default) { [self] _ in
-                delegate?.battleViewControllerDidFinish(self, didFinish: battleModel)
+                delegate?.battleViewController(self, didFinish: battleModel)
             })
             present(alert, animated: true)
         })

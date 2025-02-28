@@ -196,13 +196,13 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     }
     
     func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
-//        if (game.isPlayerMovementActive()) {
-//            cancelMovement()
-//        }
+        //It needs to reset cell colors to normal if you drop to forbidden area(red cell or beetween cells)
+        cancelMovement()
     }
 
     
     func cancelMovement() {
+        guard game.isPlayerMovementActive() else { return }
         game.resetPlayerMovement()
         reloadSnapshot(animating: false)
     }
@@ -226,11 +226,33 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
 }
 
 extension BattleFieldViewController: BattleViewControllerDelegate {
-    func battleViewControllerDidFinish(_ controller: BattleViewController, didFinish battle: Battle) {
+    func battleViewController(_ controller: BattleViewController, didFinish battle: Battle) {
         controller.dismiss(animated: true) { [self] in
+            
+            let playerCellID = field.cell(withFighter: battle.playerFighter)!
+            let enemyCellID = field.cell(withFighter: battle.enemyFighter)!
             game.finishBattle(battle: battle)
-            reloadSnapshot()
-            game.toogleTurn()
+            
+            func finishMovementIfNeeded() -> Bool {
+                if (game.turn == .player && battle.winner === battle.playerFighter) {
+                    game.startPlayerMovement(cellID: playerCellID)
+                    game.setPlayerMovementDestinaiton(cellID: enemyCellID)
+                    game.movePlayerToDestination()
+                    return true
+                }
+                if (game.turn == .ai && battle.winner === battle.enemyFighter) {
+                    game.startPlayerMovement(cellID: enemyCellID)
+                    game.setPlayerMovementDestinaiton(cellID: playerCellID)
+                    game.movePlayerToDestination()
+                    return true
+                }
+                return false
+            }
+
+            if (!finishMovementIfNeeded()){
+                reloadSnapshot()
+                game.toogleTurn()
+            }
         }
     }
     
