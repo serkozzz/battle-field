@@ -18,6 +18,7 @@ class BattleFieldViewController: UIViewController {
     var aiController: AIController!
    
     var aiMotionAnimator: FighterMovementAnimator!
+    var dropAnimator: UIDragAnimating!
     
     private var field = GameContext.shared.field
     
@@ -108,7 +109,16 @@ extension BattleFieldViewController: GameDelegate {
     func game(sender: Game, didPlayerMoveFrom startID: UUID, to destID: UUID) {
         let items = (game.turn == .player) ? dataSource.snapshot().itemIdentifiers : [startID, destID]
         reloadSnapshot(items: items, animating: false)
-        game.toogleTurn()
+        
+        if (game.turn == .player && dropAnimator != nil) {
+            dropAnimator.addCompletion { [weak self] _ in
+                self?.game.toogleTurn()
+            }
+            dropAnimator = nil
+        }
+        else {
+            game.toogleTurn()
+        }
     }
     
     func game(sender: Game, didBattleStart battle: Battle) {
@@ -125,11 +135,9 @@ extension BattleFieldViewController: GameDelegate {
     func makeAITurn() {
         //reloadSnapshot()
         let fighter = aiController.selectFighter()
-        let src = field.cell(withFighter: fighter)!
         let dest = aiController.chooseMovementDestination(for: fighter)
         aiMotionAnimator.animateMovement(fighter: fighter, to: dest) { [weak self] in
             self?.game.moveAI(fighter: fighter, to: dest)
-            //self?.reloadSnapshot(items: [src, dest], animating: false)
         }
     }
     
@@ -140,7 +148,7 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         
         let id = dataSource.itemIdentifier(for: indexPath)!
         
-        if !game.canStartPlayerMovement(cellID: id) {
+        if game.turn != .player || !game.canStartPlayerMovement(cellID: id) {
             return []
         }
         game.startPlayerMovement(cellID: id)
@@ -212,12 +220,15 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         //drop is called only for valid destination.
         //the next check may be unneccessary, but apply gives us coordinator.destinationIndexPath as optional.
         guard let dropDestIndex = coordinator.destinationIndexPath,
-              let dropDest = dataSource.itemIdentifier(for: dropDestIndex)
+              let dropDest = dataSource.itemIdentifier(for: dropDestIndex),
+              let dragItem = coordinator.items.first?.dragItem
         else {
             cancelMovement()
             return
         }
     
+        
+        dropAnimator = coordinator.drop(dragItem, toItemAt: dropDestIndex)
         game.setPlayerMovementDestinaiton(cellID: dropDest)
         game.movePlayerToDestination()
         return

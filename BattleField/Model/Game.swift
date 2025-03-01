@@ -134,7 +134,7 @@ extension Game {
     }
     
     private func finishPlayerMovement() {
-        var path = (characterMover.selectedCell!, characterMover.movementDestination!)
+        let path = (characterMover.selectedCell!, characterMover.movementDestination!)
         characterMover.moveToDestination()
         characterMover = nil
         delegate?.game(sender: self, didPlayerMoveFrom: path.0, to: path.1)
