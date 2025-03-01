@@ -43,7 +43,7 @@ class BattleFieldViewController: UIViewController {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BattleFieldCollectionCell
             let cellModel = field.cell(id: cellID)
             
-            if (game.getPlayerMovementDestination() == cellID) {
+            if (game.getFighterMovementDestination() == cellID) {
                 cell.layer.borderWidth = 2
                 cell.layer.borderColor =  UIColor.black.cgColor
                 
@@ -148,10 +148,10 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         
         let id = dataSource.itemIdentifier(for: indexPath)!
         
-        if game.turn != .player || !game.canStartPlayerMovement(cellID: id) {
+        if game.turn != .player || !game.canStartFighterMovement(cellID: id) {
             return []
         }
-        game.startPlayerMovement(cellID: id)
+        game.startFighterMovement(cellID: id)
         
         let itemProvider = NSItemProvider(object: NSString())
         let dragItem = UIDragItem(itemProvider: itemProvider)
@@ -188,17 +188,17 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
         let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
         
         var resultDropProposal = UICollectionViewDropProposal(operation: .move)
-        let previousDst = game.getPlayerMovementDestination()
+        let previousDst = game.getFighterMovementDestination()
         
-        if game.canMovePlayer(to: dstItemID) {
-            game.setPlayerMovementDestinaiton(cellID: dstItemID)
+        if game.canMoveFighter(to: dstItemID) {
+            game.setFighterMovementDestinaiton(cellID: dstItemID)
         }
         else {
-            game.setPlayerMovementDestinaiton(cellID: nil)
+            game.setFighterMovementDestinaiton(cellID: nil)
             resultDropProposal = UICollectionViewDropProposal(operation: .forbidden)
         }
             
-        if previousDst != game.getPlayerMovementDestination() {
+        if previousDst != game.getFighterMovementDestination() {
             reloadSnapshot(items: [previousDst, dstItemID].compactMap{$0}, animating: false)
         }
         return resultDropProposal
@@ -211,8 +211,8 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
 
     
     func cancelMovement() {
-        guard game.isPlayerMovementActive() else { return }
-        game.resetPlayerMovement()
+        guard game.isFighterMovementActive() else { return }
+        game.resetFighterMovement()
         reloadSnapshot(animating: false)
     }
     
@@ -229,8 +229,8 @@ extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionV
     
         
         dropAnimator = coordinator.drop(dragItem, toItemAt: dropDestIndex)
-        game.setPlayerMovementDestinaiton(cellID: dropDest)
-        game.movePlayerToDestination()
+        game.setFighterMovementDestinaiton(cellID: dropDest)
+        game.moveFighterToDestination()
         return
     }
     
@@ -247,15 +247,15 @@ extension BattleFieldViewController: BattleViewControllerDelegate {
             
             func finishMovementIfNeeded() -> Bool {
                 if (game.turn == .player && battle.winner === battle.playerFighter) {
-                    game.startPlayerMovement(cellID: playerCellID)
-                    game.setPlayerMovementDestinaiton(cellID: enemyCellID)
-                    game.movePlayerToDestination()
+                    game.startFighterMovement(cellID: playerCellID)
+                    game.setFighterMovementDestinaiton(cellID: enemyCellID)
+                    game.moveFighterToDestination()
                     return true
                 }
                 if (game.turn == .ai && battle.winner === battle.enemyFighter) {
-                    game.startPlayerMovement(cellID: enemyCellID)
-                    game.setPlayerMovementDestinaiton(cellID: playerCellID)
-                    game.movePlayerToDestination()
+                    game.startFighterMovement(cellID: enemyCellID)
+                    game.setFighterMovementDestinaiton(cellID: playerCellID)
+                    game.moveFighterToDestination()
                     return true
                 }
                 return false

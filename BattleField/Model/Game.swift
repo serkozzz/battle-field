@@ -84,23 +84,23 @@ extension Game {
             return
         }
         characterMover = CharacterMover(startCellID: sourceID, destinationCellID: destID)
-        finishPlayerMovement()
+        finishFighterMovement()
     }
 }
 
 //MARK: Player Movement
 extension Game {
     
-    func isPlayerMovementActive() -> Bool {  return characterMover != nil }
+    func isFighterMovementActive() -> Bool {  return characterMover != nil }
     
-    func canStartPlayerMovement(cellID: UUID) -> Bool {
+    func canStartFighterMovement(cellID: UUID) -> Bool {
         if let fighter = field.cell(id: cellID).fighter {
             return player.fighters.contains { $0 === fighter }
         }
         return false
     }
     
-    func canMovePlayer(to cellID: UUID) -> Bool {
+    func canMoveFighter(to cellID: UUID) -> Bool {
         if let fighter = field.cell(id: cellID).fighter,
            player.fighters.contains(where: { $0 === fighter }) {
             return false
@@ -108,32 +108,32 @@ extension Game {
         return characterMover.canMoveTo(cellID: cellID)
     }
     
-    func startPlayerMovement(cellID: UUID) {
+    func startFighterMovement(cellID: UUID) {
         characterMover = CharacterMover()
         characterMover.startMovement(cellID: cellID)
     }
     
-    func setPlayerMovementDestinaiton(cellID: UUID?) { characterMover.setMovementDestinaiton(cellID: cellID) }
+    func setFighterMovementDestinaiton(cellID: UUID?) { characterMover.setMovementDestinaiton(cellID: cellID) }
     
-    func getPlayerMovementDestination() -> UUID? { characterMover?.movementDestination }
+    func getFighterMovementDestination() -> UUID? { characterMover?.movementDestination }
  
-    func resetPlayerMovement() { characterMover = nil }
+    func resetFighterMovement() { characterMover = nil }
     
-    func movePlayerToDestination() {
+    func moveFighterToDestination() {
         let cellDest = field.cell(id: characterMover.movementDestination!)
         if aiPlayer.fighters.contains(where: { $0 === cellDest.fighter }) {
             let playerFighter = field.cell(id: characterMover.selectedCell!).fighter!
             let enemyFighter = field.cell(id: characterMover.movementDestination!).fighter!
             let battle = Battle(playerFighter: playerFighter, enemyFighter: enemyFighter)
-            resetPlayerMovement()
+            resetFighterMovement()
             delegate?.game(sender: self, didBattleStart: battle)
         }
         else {
-            finishPlayerMovement()
+            finishFighterMovement()
         }
     }
     
-    private func finishPlayerMovement() {
+    private func finishFighterMovement() {
         let path = (characterMover.selectedCell!, characterMover.movementDestination!)
         characterMover.moveToDestination()
         characterMover = nil
