@@ -59,10 +59,10 @@ extension BattleFieldViewController {
         dataSource.apply(snapshot, animatingDifferences: animating)
     }
     
-    func reloadSnapshot(items: [UUID], animating: Bool = true) {
+    func reloadSnapshot(items: [UUID], animating: Bool = true, completion: (() -> Void)? = nil) {
         var snapshot = dataSource.snapshot()
         snapshot.reloadItems(items)
-        dataSource.apply(snapshot, animatingDifferences: animating)
+        dataSource.apply(snapshot, animatingDifferences: animating, completion: completion)
     }
     
     

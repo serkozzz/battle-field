@@ -95,12 +95,13 @@ extension BattleFieldViewController: GameDelegate {
 
 extension BattleFieldViewController: BattleViewControllerDelegate {
     func battleViewController(_ controller: BattleViewController, didFinish battle: Battle) {
+        let playerCellID = field.cell(withFighter: battle.playerFighter)!
+        let enemyCellID = field.cell(withFighter: battle.enemyFighter)!
+        
+        reloadSnapshot(items: [playerCellID, enemyCellID], animating: false)
         controller.dismiss(animated: true) { [self] in
-            
-            let playerCellID = field.cell(withFighter: battle.playerFighter)!
-            let enemyCellID = field.cell(withFighter: battle.enemyFighter)!
             game.finishBattle(battle: battle)
-            
+
             func finishMovementIfNeeded() -> Bool {
                 if (game.turn == .player && battle.winner === battle.playerFighter) {
                     let animator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
@@ -122,10 +123,12 @@ extension BattleFieldViewController: BattleViewControllerDelegate {
                 }
                 return false
             }
-
-            if (!finishMovementIfNeeded()){
-                reloadSnapshot()
-                game.toogleTurn()
+            
+            let disappearingFighterCell = (battle.winner === battle.playerFighter) ? enemyCellID : playerCellID
+            reloadSnapshot(items: [disappearingFighterCell], animating: true) { [self] in
+                if (!finishMovementIfNeeded()){
+                    game.toogleTurn()
+                }
             }
         }
     }

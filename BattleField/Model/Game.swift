@@ -80,6 +80,7 @@ extension Game {
         if (player.fighters.contains(where: {$0 === destCell.fighter })) {
             let sourceCell = field.cell(id: sourceID)
             let battle = Battle(playerFighter: destCell.fighter!, enemyFighter: sourceCell.fighter!)
+            
             delegate?.game(sender: self, didBattleStart: battle)
             return
         }

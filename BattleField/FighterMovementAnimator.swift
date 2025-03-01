@@ -27,6 +27,8 @@ class FighterMovementAnimator
         let startFrame = startCollectionCell.convert(startCollectionCell.imageView.frame, to: collectionView)
         let destFrame = destCollectionCell.convert(destCollectionCell.imageView.frame, to: collectionView)
 
+        
+        startCollectionCell.setFighter(fighter: fighter)
         let imageViewToMove = startCollectionCell.imageView.snapshotView(afterScreenUpdates: true)!
         imageViewToMove.removeFromSuperview()
         collectionView.addSubview(imageViewToMove)
