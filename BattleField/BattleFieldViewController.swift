@@ -46,8 +46,8 @@ class BattleFieldViewController: UIViewController {
         aiMotionAnimator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
     }
 
-    @IBAction func aiTurn(_ sender: Any) {
-        game.toogleTurn()
+    @IBAction func skipTurn(_ sender: Any) {
+        if (game.turn == .player) { game.toogleTurn() }
     }
     
     func checkGameEndAndShowAlert() -> Bool {
