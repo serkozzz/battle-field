@@ -47,6 +47,7 @@ class BattleFieldViewController: UIViewController {
     }
 
     @IBAction func skipTurn(_ sender: Any) {
+        //can call crash if tap fast
         if (game.turn == .player) { game.toogleTurn() }
     }
     
