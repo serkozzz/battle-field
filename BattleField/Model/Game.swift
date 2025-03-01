@@ -40,6 +40,7 @@ class Game  {
     private lazy var aiPlayer = GameContext.shared.aiPlayer
     
     init() {
+        
         (0..<field.rows).forEach{ _ in
             player.fighters.append(Fighter(imageColor: .blue))
             aiPlayer.fighters.append(Fighter(imageColor: .red))
@@ -68,6 +69,12 @@ class Game  {
         else {
             return .normal
         }
+    }
+    
+    func checkWinner() -> Character? {
+        if (player.fighters.count == 0) { return aiPlayer }
+        if (aiPlayer.fighters.count == 0) { return player }
+        return nil
     }
 }
 

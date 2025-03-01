@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol BattleFieldViewControllerDelegate: AnyObject {
+    func battleFieldViewController(_ viewController: BattleFieldViewController, didGameEnd winner: Character?)
+}
+
 class BattleFieldViewController: UIViewController {
 
+    weak var delegate: BattleFieldViewControllerDelegate?
+    
     @IBOutlet weak var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Int, UUID>!
     
@@ -42,6 +48,19 @@ class BattleFieldViewController: UIViewController {
 
     @IBAction func aiTurn(_ sender: Any) {
         game.toogleTurn()
+    }
+    
+    func checkGameEndAndShowAlert() -> Bool {
+        let winner = game.checkWinner()
+        if (winner == nil) { return false }
+        let title = (winner === GameContext.shared.player) ? "Congratulations" : "Game over"
+        let message = (winner === GameContext.shared.player) ? "You win" : "You lose"
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default) { [self] _ in
+            delegate?.battleFieldViewController(self, didGameEnd: winner)
+        })
+        present(alertVC, animated: true)
+        return true
     }
 }
 
@@ -126,6 +145,7 @@ extension BattleFieldViewController: BattleViewControllerDelegate {
             
             let disappearingFighterCell = (battle.winner === battle.playerFighter) ? enemyCellID : playerCellID
             reloadSnapshot(items: [disappearingFighterCell], animating: true) { [self] in
+                if (checkGameEndAndShowAlert()) { return }
                 if (!finishMovementIfNeeded()){
                     game.toogleTurn()
                 }

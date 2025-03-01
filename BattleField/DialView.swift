@@ -33,7 +33,7 @@ class DialView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     private var displayLink: CADisplayLink?
     private var velocity: CGFloat = 0.0
     private var targetRow: Int = 0
-    private var rollTime: Double = 0.1
+    private var rollTime: Double = 2.0
     private var lastTimeSpan: TimeInterval?
     private var rollProgress = 0.0
     private var animationCurve: AnimationCurveFunction!

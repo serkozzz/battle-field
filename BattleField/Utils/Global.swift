@@ -6,7 +6,7 @@
 //
 
 enum Global {
-    static var FIELD_COLUMNS: Int = 2
-    static var FIELD_ROWS: Int = 5
+    static var FIELD_COLUMNS: Int = 3
+    static var FIELD_ROWS: Int = 2
     static var STEP_DISTANCE : Int = 1
 }

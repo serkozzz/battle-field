@@ -32,6 +32,7 @@
 		9DE6452B2D725F0F00238FDB /* GameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452A2D725F0600238FDB /* GameContext.swift */; };
 		9DE6452E2D728A8500238FDB /* BattleFieldViewController+Drag'n'Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452D2D728A8400238FDB /* BattleFieldViewController+Drag'n'Drop.swift */; };
 		9DE645302D728B0C00238FDB /* BattleFieldViewController+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452F2D728B0700238FDB /* BattleFieldViewController+CollectionView.swift */; };
+		9DE645322D72AB1100238FDB /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE645312D72AB0900238FDB /* MainMenuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		9DE6452A2D725F0600238FDB /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
 		9DE6452D2D728A8400238FDB /* BattleFieldViewController+Drag'n'Drop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BattleFieldViewController+Drag'n'Drop.swift"; sourceTree = "<group>"; };
 		9DE6452F2D728B0700238FDB /* BattleFieldViewController+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BattleFieldViewController+CollectionView.swift"; sourceTree = "<group>"; };
+		9DE645312D72AB0900238FDB /* MainMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				9D638DC12D6983A900F2FA25 /* LaunchScreen.storyboard */,
 				9D638DC32D6983A900F2FA25 /* Main.storyboard */,
 				9D638DC42D6983A900F2FA25 /* SceneDelegate.swift */,
+				9DE645312D72AB0900238FDB /* MainMenuViewController.swift */,
 				9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */,
 				9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */,
 				9D638DC52D6983A900F2FA25 /* BattleFieldViewController.swift */,
@@ -217,6 +220,7 @@
 			files = (
 				9D638DE72D7109DE00F2FA25 /* BattleViewController.swift in Sources */,
 				9D638DDD2D6E41F600F2FA25 /* Character.swift in Sources */,
+				9DE645322D72AB1100238FDB /* MainMenuViewController.swift in Sources */,
 				9D638DD12D6983C800F2FA25 /* Field.swift in Sources */,
 				9D638DCB2D6983A900F2FA25 /* AppDelegate.swift in Sources */,
 				9D638DD52D6CBAF600F2FA25 /* Game.swift in Sources */,

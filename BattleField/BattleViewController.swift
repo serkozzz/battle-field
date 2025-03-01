@@ -39,7 +39,7 @@ class BattleViewController : UIViewController, DialViewDelegate {
     }
     
     @IBAction func roll(_ sender: Any) {
-        diceResult = Dice.random()
+        diceResult = battleModel.rollDice()
         dialView.delegate = self
         dialView.roll(to: diceResult)
         
@@ -48,7 +48,7 @@ class BattleViewController : UIViewController, DialViewDelegate {
     func dialView(_ dialView: DialView, didRollFinished: Void) {
         let winner = battleModel.calculateWinner()
         let loserImageView = (winner === battleModel.playerFighter) ? enemyImageView: playerImageView
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 2, animations: {
             loserImageView?.tintColor = .clear
         }, completion: { [self] _ in
             
