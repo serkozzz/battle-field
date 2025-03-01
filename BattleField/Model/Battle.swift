@@ -18,7 +18,7 @@ struct Battle {
     }
     
     mutating func calculateWinner() -> Fighter {
-        winner = enemyFighter
+        winner = playerFighter
         return winner!
     }
 }

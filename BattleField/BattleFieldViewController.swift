@@ -70,6 +70,7 @@ extension BattleFieldViewController: GameDelegate {
     }
     
     func game(sender: Game, didBattleStart battle: Battle) {
+        dropAnimator = nil
         let storyboard = UIStoryboard(name: "Battle", bundle: nil)
         let battleVC = storyboard.instantiateInitialViewController { coder in
             return BattleViewController(coder: coder, battleModel: battle)
@@ -102,15 +103,21 @@ extension BattleFieldViewController: BattleViewControllerDelegate {
             
             func finishMovementIfNeeded() -> Bool {
                 if (game.turn == .player && battle.winner === battle.playerFighter) {
-                    game.startFighterMovement(cellID: playerCellID)
-                    game.setFighterMovementDestinaiton(cellID: enemyCellID)
-                    game.moveFighterToDestination()
+                    let animator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
+                    animator.animateMovement(fighter: battle.playerFighter, to: enemyCellID) { [self] in
+                        game.startFighterMovement(cellID: playerCellID)
+                        game.setFighterMovementDestinaiton(cellID: enemyCellID)
+                        game.moveFighterToDestination()
+                    }
                     return true
                 }
                 if (game.turn == .ai && battle.winner === battle.enemyFighter) {
-                    game.startFighterMovement(cellID: enemyCellID)
-                    game.setFighterMovementDestinaiton(cellID: playerCellID)
-                    game.moveFighterToDestination()
+                    let animator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
+                    animator.animateMovement(fighter: battle.enemyFighter, to: playerCellID) { [self] in
+                        game.startFighterMovement(cellID: enemyCellID)
+                        game.setFighterMovementDestinaiton(cellID: playerCellID)
+                        game.moveFighterToDestination()
+                    }
                     return true
                 }
                 return false
