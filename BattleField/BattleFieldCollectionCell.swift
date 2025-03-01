@@ -8,6 +8,7 @@
 import UIKit
 
 class BattleFieldCollectionCell: UICollectionViewCell {
+    static let reuseID = "BattleFieldCollectionCell"
     
     func setFighter(fighter: Fighter?) {
         imageView.image = fighter != nil ? UIImage(systemName: fighter!.imageName) : nil
@@ -16,7 +17,7 @@ class BattleFieldCollectionCell: UICollectionViewCell {
     
     func blinkBorder() {
         
-        var color = layer.borderColor
+        let color = layer.borderColor
         layer.borderColor = UIColor.clear.cgColor // Начальный цвет — прозрачный
         
         let animation = CABasicAnimation(keyPath: "borderColor")

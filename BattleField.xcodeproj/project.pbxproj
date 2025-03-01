@@ -30,6 +30,8 @@
 		9D638DEB2D710FA200F2FA25 /* DialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DEA2D710F9A00F2FA25 /* DialView.swift */; };
 		9D638DED2D71557800F2FA25 /* AnimationCurves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D638DEC2D71556E00F2FA25 /* AnimationCurves.swift */; };
 		9DE6452B2D725F0F00238FDB /* GameContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452A2D725F0600238FDB /* GameContext.swift */; };
+		9DE6452E2D728A8500238FDB /* BattleFieldViewController+Drag'n'Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452D2D728A8400238FDB /* BattleFieldViewController+Drag'n'Drop.swift */; };
+		9DE645302D728B0C00238FDB /* BattleFieldViewController+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE6452F2D728B0700238FDB /* BattleFieldViewController+CollectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		9D638DEA2D710F9A00F2FA25 /* DialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialView.swift; sourceTree = "<group>"; };
 		9D638DEC2D71556E00F2FA25 /* AnimationCurves.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCurves.swift; sourceTree = "<group>"; };
 		9DE6452A2D725F0600238FDB /* GameContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContext.swift; sourceTree = "<group>"; };
+		9DE6452D2D728A8400238FDB /* BattleFieldViewController+Drag'n'Drop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BattleFieldViewController+Drag'n'Drop.swift"; sourceTree = "<group>"; };
+		9DE6452F2D728B0700238FDB /* BattleFieldViewController+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BattleFieldViewController+CollectionView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,8 +94,7 @@
 		9D638DC62D6983A900F2FA25 /* BattleField */ = {
 			isa = PBXGroup;
 			children = (
-				9D638DEC2D71556E00F2FA25 /* AnimationCurves.swift */,
-				9D638DDE2D6E454400F2FA25 /* Global.swift */,
+				9DE6452C2D72895900238FDB /* Utils */,
 				9D638DCF2D6983B000F2FA25 /* Model */,
 				9D638DBC2D6983A900F2FA25 /* AppDelegate.swift */,
 				9D638DBD2D6983A900F2FA25 /* Assets.xcassets */,
@@ -102,6 +105,8 @@
 				9D638DE02D6E528D00F2FA25 /* FighterMovementAnimator.swift */,
 				9D638DD62D6D5BDD00F2FA25 /* BattleFieldCollectionCell.swift */,
 				9D638DC52D6983A900F2FA25 /* BattleFieldViewController.swift */,
+				9DE6452F2D728B0700238FDB /* BattleFieldViewController+CollectionView.swift */,
+				9DE6452D2D728A8400238FDB /* BattleFieldViewController+Drag'n'Drop.swift */,
 				9D638DE62D7109D600F2FA25 /* BattleViewController.swift */,
 				9D638DEA2D710F9A00F2FA25 /* DialView.swift */,
 				9D638DE82D710AE600F2FA25 /* Battle.storyboard */,
@@ -124,6 +129,15 @@
 				9D638DBE2D6983A900F2FA25 /* Fighter.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		9DE6452C2D72895900238FDB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9D638DEC2D71556E00F2FA25 /* AnimationCurves.swift */,
+				9D638DDE2D6E454400F2FA25 /* Global.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,6 +221,7 @@
 				9D638DCB2D6983A900F2FA25 /* AppDelegate.swift in Sources */,
 				9D638DD52D6CBAF600F2FA25 /* Game.swift in Sources */,
 				9D638DCC2D6983A900F2FA25 /* Fighter.swift in Sources */,
+				9DE6452E2D728A8500238FDB /* BattleFieldViewController+Drag'n'Drop.swift in Sources */,
 				9D638DE12D6E529500F2FA25 /* FighterMovementAnimator.swift in Sources */,
 				9D638DD72D6D5BE600F2FA25 /* BattleFieldCollectionCell.swift in Sources */,
 				9D638DCD2D6983A900F2FA25 /* SceneDelegate.swift in Sources */,
@@ -218,6 +233,7 @@
 				9D638DDF2D6E454800F2FA25 /* Global.swift in Sources */,
 				9D638DD92D6E35DD00F2FA25 /* PlayerMover.swift in Sources */,
 				9D638DD32D69845400F2FA25 /* FieldCell.swift in Sources */,
+				9DE645302D728B0C00238FDB /* BattleFieldViewController+CollectionView.swift in Sources */,
 				9D638DEB2D710FA200F2FA25 /* DialView.swift in Sources */,
 				9D638DDB2D6E40DF00F2FA25 /* AIController.swift in Sources */,
 			);

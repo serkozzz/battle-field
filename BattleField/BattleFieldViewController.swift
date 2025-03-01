@@ -7,8 +7,6 @@
 
 import UIKit
 
-private var reuseIdentifier = "Cell"
-
 class BattleFieldViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
@@ -20,7 +18,7 @@ class BattleFieldViewController: UIViewController {
     var aiMotionAnimator: FighterMovementAnimator!
     var dropAnimator: UIDragAnimating!
     
-    private var field = GameContext.shared.field
+    var field = GameContext.shared.field
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,69 +27,19 @@ class BattleFieldViewController: UIViewController {
         aiController = AIController(aiPlayer: GameContext.shared.aiPlayer)
                 
         collectionView.collectionViewLayout = createLayout()
-        collectionView.register(BattleFieldCollectionCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(BattleFieldCollectionCell.self, forCellWithReuseIdentifier: BattleFieldCollectionCell.reuseID)
         
         collectionView.dragInteractionEnabled = true // Включить drag
         collectionView.dragDelegate = self
         collectionView.dropDelegate = self
         
         // Do any additional setup after loading the view.
-        dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView) { [weak self] collectionView, indexPath,
-            cellID in
-            guard let self = self else { return nil }
-            
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BattleFieldCollectionCell
-            let cellModel = field.cell(id: cellID)
-            
-            if (game.getFighterMovementDestination() == cellID) {
-                cell.layer.borderWidth = 2
-                cell.layer.borderColor =  UIColor.black.cgColor
-                
-                if (cellModel.fighter != nil) {
-                    cell.layer.borderColor =  UIColor.red.cgColor
-                    cell.blinkBorder()
-                }
-            }
-            else {
-                cell.stopBlinkBorder()
-                cell.layer.borderWidth = 0
-            }
-            switch game.cellState(id: cellID) {
-            case.normal:
-                cell.backgroundColor = .systemGray6
-            case .accesable:
-                cell.backgroundColor = .init(red: 0, green: 1, blue: 0, alpha: 0.2)
-            case .forbidden:
-                cell.backgroundColor = .init(red: 1, green: 0, blue: 0, alpha: 0.6)
-            }
-        
-            cell.setFighter(fighter: cellModel.fighter)
-            return cell
-        }
+        dataSource = createDataSource()
         applySnapshot()
         
         aiMotionAnimator = FighterMovementAnimator(collectionView: collectionView, diffableDataSource: dataSource)
     }
-    
-    func applySnapshot(){
-        var snapshot = NSDiffableDataSourceSnapshot<Int, UUID>()
-        snapshot.appendSections([0])
-        snapshot.appendItems(field.flattenedCells.map { $0.id })
-        dataSource.apply(snapshot, animatingDifferences: true)
-    }
-    
-    func reloadSnapshot(animating: Bool = true) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reloadSections([0])
-        dataSource.apply(snapshot, animatingDifferences: animating)
-    }
-    
-    func reloadSnapshot(items: [UUID], animating: Bool = true) {
-        var snapshot = dataSource.snapshot()
-        snapshot.reloadItems(items)
-        dataSource.apply(snapshot, animatingDifferences: animating)
-    }
-    
+
     @IBAction func aiTurn(_ sender: Any) {
         game.toogleTurn()
     }
@@ -143,99 +91,6 @@ extension BattleFieldViewController: GameDelegate {
     
 }
 
-extension BattleFieldViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
-    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: any UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-        
-        let id = dataSource.itemIdentifier(for: indexPath)!
-        
-        if game.turn != .player || !game.canStartFighterMovement(cellID: id) {
-            return []
-        }
-        game.startFighterMovement(cellID: id)
-        
-        let itemProvider = NSItemProvider(object: NSString())
-        let dragItem = UIDragItem(itemProvider: itemProvider)
-        dragItem.localObject = id
-        
-        let cell = collectionView.cellForItem(at: indexPath) as! BattleFieldCollectionCell
-        let previewCell = cell.snapshotView(afterScreenUpdates: false)!
-        //previewCell.backgroundColor = .clear
-        
-        dragItem.previewProvider = {
-            
-            let previewParams = UIDragPreviewParameters()
-            previewParams.backgroundColor = .clear // Полностью прозрачный фон
-            previewParams.visiblePath = UIBezierPath(roundedRect: previewCell.frame, cornerRadius: 10)
-            
-            let preview = UIDragPreview(view: previewCell, parameters: previewParams)
-            return preview
-        }
-        
-        reloadSnapshot()
-        return [dragItem]
-    }
-    
-
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        dropSessionDidUpdate session: any UIDropSession,
-        withDestinationIndexPath destinationIndexPath: IndexPath?
-    ) -> UICollectionViewDropProposal {
-        
-        guard let dstIdxPath = destinationIndexPath else { return UICollectionViewDropProposal(operation: .forbidden) }
-        
-        let dstItemID = dataSource.itemIdentifier(for: dstIdxPath)!
-        
-        var resultDropProposal = UICollectionViewDropProposal(operation: .move)
-        let previousDst = game.getFighterMovementDestination()
-        
-        if game.canMoveFighter(to: dstItemID) {
-            game.setFighterMovementDestinaiton(cellID: dstItemID)
-        }
-        else {
-            game.setFighterMovementDestinaiton(cellID: nil)
-            resultDropProposal = UICollectionViewDropProposal(operation: .forbidden)
-        }
-            
-        if previousDst != game.getFighterMovementDestination() {
-            reloadSnapshot(items: [previousDst, dstItemID].compactMap{$0}, animating: false)
-        }
-        return resultDropProposal
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: any UIDragSession) {
-        //It needs to reset cell colors to normal if you drop to forbidden area(red cell or beetween cells)
-        cancelMovement()
-    }
-
-    
-    func cancelMovement() {
-        guard game.isFighterMovementActive() else { return }
-        game.resetFighterMovement()
-        reloadSnapshot(animating: false)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: any UICollectionViewDropCoordinator) {
-        //drop is called only for valid destination.
-        //the next check may be unneccessary, but apply gives us coordinator.destinationIndexPath as optional.
-        guard let dropDestIndex = coordinator.destinationIndexPath,
-              let dropDest = dataSource.itemIdentifier(for: dropDestIndex),
-              let dragItem = coordinator.items.first?.dragItem
-        else {
-            cancelMovement()
-            return
-        }
-    
-        
-        dropAnimator = coordinator.drop(dragItem, toItemAt: dropDestIndex)
-        game.setFighterMovementDestinaiton(cellID: dropDest)
-        game.moveFighterToDestination()
-        return
-    }
-    
-    
-}
 
 extension BattleFieldViewController: BattleViewControllerDelegate {
     func battleViewController(_ controller: BattleViewController, didFinish battle: Battle) {
@@ -267,29 +122,6 @@ extension BattleFieldViewController: BattleViewControllerDelegate {
             }
         }
     }
-    
-    
 }
 
 
-extension BattleFieldViewController {
-    func createLayout() -> UICollectionViewCompositionalLayout {
-        
-        return UICollectionViewCompositionalLayout { [weak self] sectionIndex, layoutEnvironment in
-            guard let self else { return nil }
-            
-            let itemWidth = 1 / CGFloat(field.columns)
-            let itemHeight = 1 / CGFloat(field.rows)
-            
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(itemWidth), heightDimension: .fractionalHeight(1))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(itemHeight))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-            
-            return NSCollectionLayoutSection(group: group)
-            
-        }
-    }
-}
