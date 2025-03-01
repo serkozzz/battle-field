@@ -38,9 +38,9 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPl-Z0-2ro">
-                                <rect key="frame" x="388.66666666666669" y="293" width="75" height="35"/>
+                                <rect key="frame" x="378.33333333333331" y="329" width="95.666666666666686" height="35"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Skip Turn"/>
                                 <connections>
                                     <action selector="aiTurn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3f1-gl-ijf"/>
                                 </connections>
@@ -50,7 +50,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="qPl-Z0-2ro" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="GQf-hT-fdg"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="qPl-Z0-2ro" secondAttribute="bottom" constant="44" id="HrG-KA-J2i"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="qPl-Z0-2ro" secondAttribute="bottom" constant="8" id="HrG-KA-J2i"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="nFG-UE-fcF" secondAttribute="bottom" id="Yp0-BA-Drb"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="nFG-UE-fcF" secondAttribute="trailing" id="byn-lA-MxB"/>
                             <constraint firstItem="nFG-UE-fcF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="j8a-7B-vat"/>
